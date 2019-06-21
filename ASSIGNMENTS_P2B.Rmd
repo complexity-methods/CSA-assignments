@@ -1,0 +1,562 @@
+---
+title: "DCS Assignments Session 4"
+author: "Fred Hasselman & Maarten Wijnants"
+date: "1/14/2019"
+output: 
+  bookdown::html_document2: 
+    variant: markdown+hard_line_breaks
+    fig_caption: yes
+    highlight: pygments
+    keep_md: yes
+    self_contained: yes
+    number_sections: yes
+    theme: spacelab
+    toc: yes
+    toc_float: true
+    collapsed: false
+    smooth_scroll: true
+    code_folding: show
+    bibliography: [refs.bib, packages.bib]
+    biblio-style: apalike
+    csl: apa.csl
+    includes:
+        before_body: assignmentstyle.html
+    pandoc_args: ["--number-offset","4"]
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(include=TRUE, tidy = FALSE)
+```
+
+
+# **Quick Links** {-}
+
+* [Main Assignments Page](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/)
+
+
+## **Fluctuation analyses**
+
+Install package `casnet` to use the functions `fd_sda()`, `fd_psd()` and `fd_dfa()` and `plotFD_loglog()`.
+Check the manual pages for these functions.
+
+```{r,eval=TRUE, message=FALSE, warning=FALSE, eval=TRUE}
+# Install casnet if necessary: https://github.com/FredHasselman/casnet
+# !!Warning!! Beta version...
+# library(devtools)
+# devtools::install_github("FredHasselman/invctr")
+# devtools::install_github("FredHasselman/casnet")
+library(invctr)
+library(casnet)
+library(rio)
+library(plyr)
+library(dplyr)
+library(ggplot2)
+```
+
+
+We'll use the data from last week:
+
+```{r eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+library(rio)
+library(pracma)
+
+# Reload the data
+series <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/BasicTSA_arma/series.sav", setclass = "tbl_df")
+
+TS1 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS1.xlsx", col_names=FALSE)
+TS2 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS2.xlsx", col_names=FALSE)
+TS3 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS3.xlsx", col_names=FALSE)
+
+
+# The Excel files did not have any column names, so let's create them in the `data.frame`
+colnames(TS1) <- "TS1"
+colnames(TS2) <- "TS2"
+colnames(TS3) <- "TS3"
+
+# randperm()
+TS1Random <- TS1$TS1[randperm(length(TS1$TS1))]
+
+# sample()
+TS1Random <- sample(TS1$TS1, length(TS1$TS1))
+TS2Random <- sample(TS2$TS2, length(TS2$TS2))
+TS3Random <- sample(TS3$TS3, length(TS3$TS3))
+
+TS3Norm <- scale(TS3$TS3)
+
+```
+
+
+###  Standardised Dispersion Analysis {.tabset .tabset-fade .tabset-pills}
+
+
+#### Questions {-}
+
+* Common data preparation before running fluctuation analyses like `SDA`:
+    + Normalize the time series (using `sd` based on `N`, not `N-1`, e.g. by using `ts_standardise()`, or use function arguments)
+    + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can pad the series with 0s, or make it shorter before analysis.
+* Perform `sda` on the 3 HRV time series, or any of the other series you already analysed.
+* Compare to what you find for `fd_sda` to the other techniques (`fd_RR`,`SampEn`, `acf`, `pacf`)
+
+
+
+#### Answers {-}
+
+
+```{r collapse=TRUE, message=FALSE, warning=FALSE}
+
+# ACF assignment data `series`
+fdS1 <- fd_sda(series$TS_1, returnPLAW = TRUE)
+fdS2 <- fd_sda(series$TS_2, returnPLAW = TRUE)
+fdS3 <- fd_sda(series$TS_3, returnPLAW = TRUE)
+
+# If you asked to return the powerlaw (returnPLAW = TRUE) the function plotFD_loglog() can make a plot
+plotFD_loglog(fdS1,title = "SDA", subtitle = "Series 1")
+plotFD_loglog(fdS2,title = "SDA", subtitle = "Series 2")
+plotFD_loglog(fdS3,title = "SDA", subtitle = "Series 3")
+
+```
+
+
+
+**Values of other time series**
+
+```{r message=FALSE, warning=FALSE, collapse=TRUE, cache=TRUE}
+
+# RR assignment data TS1, TS2, TS3 and shuffled versions
+# This is just a check so you can see which bin sizes to expect
+# It is also possible to force calclulation of specific bin sizes, see the manual pages for more info ?fd_sda
+L1 <- floor(log2(length(TS1$TS1)))
+L2 <- floor(log2(length(TS2$TS2)))
+L3 <- floor(log2(length(TS3$TS3)))
+
+# You can also ask for a plot directly by passing doPlot = TRUE
+fdTS1  <- fd_sda(TS1$TS1[1:2^L1], doPlot = TRUE, tsName = "TS1")
+
+fdTS1r <- fd_sda(TS1Random[1:2^L1], doPlot = TRUE, tsName = "TS1 shuffled")
+
+
+fdTS2 <- fd_sda(TS2$TS2[1:2^L2], returnPLAW = TRUE)
+plotFD_loglog(fdTS2,subtitle = "TS2")
+
+fdTS2r <- fd_sda(TS2Random[1:2^L2], returnPLAW = TRUE)
+plotFD_loglog(fdTS2r,subtitle = "TS2 shuffled")
+
+fdTS3 <- fd_sda(TS3$TS3[1:2^L3], returnPLAW = TRUE)
+plotFD_loglog(fdTS3,subtitle = "TS3")
+
+fdTS3r <- fd_sda(TS3Random[1:2^L3], returnPLAW = TRUE)
+plotFD_loglog(fdTS3r,subtitle = "TS3 shuffled")
+
+fdTS3n <- fd_sda(TS3Norm[1:2^L3], returnPLAW = TRUE)
+plotFD_loglog(fdTS3n,subtitle = "TS3 standardised")
+
+
+# Logistic map
+y1 <- growth_ac(r = 2.9, type="logistic",N = 1024)
+fdL29 <- fd_sda(y1, returnPLAW = TRUE)
+plotFD_loglog(fdL29, subtitle = "Logistic Map: r =  2.9")
+
+y2 <- growth_ac(r = 4, type="logistic", N = 1024)
+fdL4 <- fd_sda(y2, returnPLAW = TRUE)
+plotFD_loglog(fdL4, subtitle = "Logistic Map: r =  4")
+
+```
+
+
+
+###  Spectral Slope {.tabset .tabset-fade .tabset-pills}
+
+
+#### Questions {-}
+
+* Common data preparation before running spectral analyses:
+    + Normalize the time series (using `sd` based on `N`, not `N-1`)
+    + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can pad the series with 0s, or make it shorter before analysis.
+* Perform `fd_psd()` on the 3 HRV time series, or any of the other series you already analysed.
+* Compare to what you find for `fd_psd` to the other measures (`fd_RR`,`SampEn`, `acf`, `pacf`)
+
+
+#### Answers {-}
+
+
+```{r collapse=TRUE,cache=TRUE, message=FALSE, warning=FALSE}
+
+# ACF assignment data `series`
+fdS1 <- fd_psd(series$TS_1, doPlot = TRUE)
+fdS2 <- fd_psd(series$TS_2, returnPLAW = TRUE)
+plotFD_loglog(fdS2,subtitle = "Series 2")
+fdS3 <- fd_psd(series$TS_3, returnPLAW = TRUE)
+plotFD_loglog(fdS3,subtitle = "Series 3")
+
+```
+
+
+
+**Values of other time series**
+
+```{r message=FALSE, warning=FALSE, collapse=TRUE, cache=TRUE}
+
+# This is just a check so you can see which frequency range to expect
+# It is also possible to force calclulation of specific bin sizes, see the manual pages for more info ?fd_psd
+L1 <- floor(log2(length(TS1$TS1)))
+L2 <- floor(log2(length(TS2$TS2)))
+L3 <- floor(log2(length(TS3$TS3)))
+
+# RR assignment data TS1, TS2, TS3 and shuffled versions
+
+fdTS1 <- fd_psd(TS1$TS1[1:2^L1], doPlot = TRUE, tsName = "TS1")
+
+fdTS1r <- fd_psd(TS1Random[1:2^L1], returnPLAW = TRUE)
+plotFD_loglog(fdTS1r,subtitle = "TS1 shuffled")
+
+fdTS2 <- fd_psd(TS2$TS2[1:2^L2], returnPLAW = TRUE)
+plotFD_loglog(fdTS2,subtitle = "TS2")
+
+fdTS2r <- fd_psd(TS2Random[1:2^L2], returnPLAW = TRUE)
+plotFD_loglog(fdTS2r,subtitle = "TS2 shuffled")
+
+fdTS3 <- fd_psd(TS3$TS3[1:2^L3], returnPLAW = TRUE)
+plotFD_loglog(fdTS3,subtitle = "TS3")
+
+fdTS3r <- fd_psd(TS3Random[1:2^L3], returnPLAW = TRUE)
+plotFD_loglog(fdTS3r,subtitle = "TS3 shuffled")
+
+fdTS3n <- fd_psd(TS3Norm[1:2^L3], returnPLAW = TRUE)
+plotFD_loglog(fdTS3n,subtitle = "TS3 standardised")
+
+
+# Logistic map
+y1 <- growth_ac(r = 2.9, type="logistic",N = 1024)
+fdL29 <- fd_psd(as.numeric(y1), returnPLAW = TRUE)
+plotFD_loglog(fdL29, subtitle = "Logistic Map: r =  2.9")
+
+y2 <- growth_ac(r = 4, type="logistic", N = 1024)
+fdL4 <- fd_psd(as.numeric(y2), returnPLAW = TRUE)
+plotFD_loglog(fdL4, subtitle = "Logistic Map: r =  4")
+
+```
+
+
+###  Detrended Fluctuation Analysis {.tabset .tabset-fade .tabset-pills}
+
+
+#### Questions {-}
+
+* Data preparation before running `DFA` analyses are not really necessary, except perhaps:
+    + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can pad the series with 0s, or make it shorter before analysis.
+* Perform `fd_dfa()` on the 3 HRV time series, or any of the other series you already analysed.
+* Compare to what you find for `fd_dfa` to the other measures (`fd_RR`,`SampEn`, `acf`, `pacf`)
+
+
+#### Answers {-}
+
+
+
+```{r collapse=TRUE,cache=TRUE, message=FALSE, warning=FALSE}
+
+# ACF assignment data `series`
+fdS1 <- fd_dfa(series$TS_1, doPlot = TRUE)
+fdS2 <- fd_dfa(series$TS_2, returnPLAW = TRUE)
+plotFD_loglog(fdS2,subtitle = "Series 2")
+fdS3 <- fd_dfa(series$TS_3, returnPLAW = TRUE)
+plotFD_loglog(fdS3,subtitle = "Series 3")
+
+```
+
+
+**Values of other time series**
+
+```{r message=FALSE, warning=FALSE, collapse=TRUE,cache=TRUE}
+
+# This is just a check so you can see which bin sizes to expect
+# It is also possible to force calclulation of specific bin sizes, see the manual pages for more info ?fd_dfa
+L1 <- floor(log2(length(TS1$TS1)))
+L2 <- floor(log2(length(TS2$TS2)))
+L3 <- floor(log2(length(TS3$TS3)))
+
+# RR assignment data TS1, TS2, TS3 and shuffled versions
+
+fdTS1 <- fd_dfa(TS1$TS1[1:2^L1], doPlot = TRUE, tsName = "TS1")
+
+fdTS1r <- fd_dfa(TS1Random[1:2^L1], returnPLAW = TRUE)
+plotFD_loglog(fdTS1r,subtitle = "TS1 shuffled")
+
+fdTS2 <- fd_dfa(TS2$TS2[1:2^L2], returnPLAW = TRUE)
+plotFD_loglog(fdTS2,subtitle = "TS2")
+
+fdTS2r <- fd_dfa(TS2Random[1:2^L2], returnPLAW = TRUE)
+plotFD_loglog(fdTS2r,subtitle = "TS2 shuffled")
+
+fdTS3 <- fd_dfa(TS3$TS3[1:2^L3], returnPLAW = TRUE)
+plotFD_loglog(fdTS3,subtitle = "TS3")
+
+fdTS3r <- fd_dfa(TS3Random[1:2^L3], returnPLAW = TRUE)
+plotFD_loglog(fdTS3r,subtitle = "TS3 shuffled")
+
+fdTS3n <- fd_dfa(TS3Norm[1:2^L3], returnPLAW = TRUE)
+plotFD_loglog(fdTS3n,subtitle = "TS3 standardised")
+
+
+# Logistic map
+y1 <- growth_ac(r = 2.9, type="logistic",N = 1024)
+fdL29 <- fd_dfa(y1, returnPLAW = TRUE)
+plotFD_loglog(fdL29, subtitle = "Logistic Map: r =  2.9")
+
+y2 <- growth_ac(r = 4, type="logistic", N = 1024)
+fdL4 <- fd_dfa(y2, returnPLAW = TRUE)
+plotFD_loglog(fdL4, subtitle = "Logistic Map: r =  4")
+
+```
+
+
+
+## **Surrogate testing: Beyond the straw-man null-hypothesis** 
+
+Look at the explanation of surrogate analysis on the [TiSEAN website](https://www.pks.mpg.de/~tisean/Tisean_3.0.1/)
+(Here is [direct link](https://www.pks.mpg.de/~tisean/Tisean_3.0.1/docs/surropaper/node5.html) to the relevant sections)
+
+
+### Constrained realisations of complex signals {.tabset .tabset-fade .tabset-pills}
+
+We'll look mostly at three different kinds of surrogates:
+
+* *Randomly shuffled*: $H_0:$ The time series data are independent random numbers drawn from some probability distribution.
+* *Phase Randomised*: $H_0:$ The time series data were generated by a stationary linear stochastic process
+* *Amplitude Adjusted ,Phase Randomised*: $H_0:$ The time series data were generated by a rescaled linear stochastic process.
+
+
+#### Questions {-}
+
+* Figure out how many surrogates you minimally need for a 2-sided test.
+* Package `nonlinearTseries` has a function `FFTsurrogate` and package `fractal` `surrogate`. Look them up and try to create a surrogate test for some of the time series of the previous assignments.
+    + If you use `fractal::surrogate()`, choose either `aaft` (amplitude adjusted Fourier transform) or `phase` (phase randomisation)
+    + `nonlinearTseries::FFTsurrogates` will calculate phase randomised surrogates.
+* In package `casnet` there's a function that will calculate and display a point-probability based on a distribution of surrogate measures and one observed measure: `plotSUR_hist`
+
+
+
+#### Answers {-}
+
+
+Create a number of surrogates, calulate the slopes and plot the results.
+
+* First let's get the values we found earlier (we'll use the FD from `sda`, then we do the same for `psd`,but you can take any of the measures as well)
+
+
+```{r message=FALSE, warning=FALSE, cache=TRUE}
+library(fractal)
+
+# RR assignment data `TS1,TS2,TS3`
+# Now we'll trim the time series length to a power of 2 to get the cleanest results, this is not strictly necessary 
+L1 <- floor(log2(length(TS1$TS1)))
+L2 <- floor(log2(length(TS2$TS2)))
+L3 <- floor(log2(length(TS2$TS2)))
+
+TS1_FDsda <- fd_sda(TS1$TS1[1:2^L1])$fitRange$FD
+TS2_FDsda <- fd_sda(TS2$TS2[1:2^L2])$fitRange$FD
+TS3_FDsda <- fd_sda(TS3$TS3[1:2^L3])$fitRange$FD
+
+y1<-growth_ac(r = 2.9,type="logistic",N = 2^L1)
+TSlogMapr29 <- fd_sda(y1)$fitRange$FD
+
+y2<-growth_ac(r = 4,type="logistic", N = 2^L1)
+TSlogMapr4 <- fd_sda(y2)$fitRange$FD
+
+# These were rendomised
+TS1R_FDsda <- fd_sda(TS1Random[1:2^L1])$fitRange$FD
+TS2R_FDsda <- fd_sda(TS1Random[1:2^L2])$fitRange$FD
+TS3R_FDsda <- fd_sda(TS1Random[1:2^L3])$fitRange$FD
+```
+
+
+* To create the surrogates using `fractal::surrogate()`
+    + You'll need to repeatedly call the function and store the result
+    + To get into a dataframe we have to use `unclass()` otherwise `R` doesn't recognise the object
+    + Function `t()` trnasposes the data from 39 rows to 39 columns
+* Once you have the surrogates in a datafram, repeatedly calculate the measure you want to compare, in this case `fd_sda()`.
+
+```{r echo=TRUE, fig.height=12, message=FALSE, warning=FALSE, cache=TRUE, collapse=TRUE}
+# NOW CREATE SURROGATES
+library(dplyr)
+
+# For a two-sided test at alpha = .05 we need N=39
+Nsurrogates <- 39
+
+TS1surrogates <- as.data.frame(t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=TS1$TS1[1:2^L1] ,method="aaft")))))
+colnames(TS1surrogates) <- paste0("S",1:NCOL(TS1surrogates))
+
+# Let's look at the surrogates and originals series...
+# NOTE: This is a bit elaborate, because ggplot2 wants to have data in tidy (= long) format, which means all the time series data have to in 1 column!
+
+# Make data frame to plot:
+TS1surrogates$Obs <- TS1$TS1[1:2^L1]
+TS1surrogates$Time <- 1:NROW(TS1surrogates)
+df <- TS1surrogates %>% tidyr::gather(key=variable, value = Y, -Time)
+
+# This will make the observed series red
+eval(parse(text = c("col <- c('Obs' = 'red3',",paste0("'",colnames(TS1surrogates)%[%39,"'"," = 'black'", collapse=","),")")))
+
+ggplot(df,aes(x=Time, y = Y, group = variable, colour = variable)) + 
+  geom_path(show.legend = FALSE) +
+  facet_grid(variable~.)  +
+  scale_colour_manual(values = col) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  theme(axis.text = element_blank(), strip.text = element_blank(), strip.background = element_blank())
+
+
+# Now we calculate FD for each series
+TS1surrogates_FD <- laply(1:Nsurrogates,function(s) fd_sda(y=TS1surrogates[,s], silent = TRUE)$fitRange$FD)
+
+TS2surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=TS2$TS2[1:2^L2] ,method="aaft"))))
+colnames(TS2surrogates) <- paste0("aaftSurr",1:NCOL(TS2surrogates))
+
+TS2surrogates_FD <- laply(1:Nsurrogates,function(s) fd_sda(y=TS2surrogates[,s], silent = TRUE)$fitRange$FD)
+
+
+TS3surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=TS3$TS3[1:2^L3] ,method="aaft"))))
+colnames(TS3surrogates) <- paste0("aaftSurr",1:NCOL(TS3surrogates))
+
+TS3surrogates_FD <- laply(1:Nsurrogates,function(s) fd_sda(y=TS3surrogates[,s], silent = TRUE)$fitRange$FD)
+
+
+TSr29surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=y1, method="aaft"))))
+colnames(TSr29surrogates) <- paste0("aaftSurr",1:NCOL(TSr29surrogates))
+
+TSr29surrogates_FD <- laply(1:Nsurrogates,function(s) fd_sda(y=TSr29surrogates[,s], silent = TRUE)$fitRange$FD)
+
+
+TSr4surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=y2, method="aaft"))))
+colnames(TSr4surrogates) <- paste0("aaftSurr",1:NCOL(TSr4surrogates))
+
+TSr4surrogates_FD <- laply(1:Nsurrogates,function(s) fd_sda(y=TSr4surrogates[,s], silent = TRUE)$fitRange$FD)
+```
+
+* Collect the results in a dataframe, so we can compare.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+x <- data.frame(Source = c("TS1", "TS2", "TS3", "TSlogMapr29", "TSlogMapr4"), 
+                FDsda = c(TS1_FDsda, TS2_FDsda, TS3_FDsda, TSlogMapr29, TSlogMapr4), 
+                FDsdaRandom =  c(TS1R_FDsda, TS2R_FDsda, TS3R_FDsda,NA,NA), 
+                FDsdaAAFT.median= c(median(TS1surrogates_FD),median(TS2surrogates_FD),median(TS3surrogates_FD),median(TSr29surrogates_FD),median(TSr4surrogates_FD)))
+
+```
+
+
+* Call function `plotSUR_hist()` to see the results of the test.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, cache=TRUE}
+plotSUR_hist(surrogateValues = TS1surrogates_FD, observedValue = TS1_FDsda, sides = "two.sided", doPlot = TRUE, measureName = "sda FD TS1")
+
+plotSUR_hist(surrogateValues = TS2surrogates_FD, observedValue = TS2_FDsda, sides = "two.sided", doPlot = TRUE, measureName = "sda FD TS2")
+
+plotSUR_hist(surrogateValues = TS3surrogates_FD, observedValue = TS3_FDsda,sides = "two.sided", doPlot = TRUE, measureName = "sda FD TS3")
+
+plotSUR_hist(surrogateValues = TSr29surrogates_FD, observedValue = TSlogMapr29,sides = "two.sided", doPlot = TRUE, measureName = "sda FD logMap r=2.9")
+
+plotSUR_hist(surrogateValues = TSr4surrogates_FD, observedValue = TSlogMapr4, sides = "two.sided", doPlot = TRUE, measureName = "sda FD logMap r=4")
+```
+
+**FD: SPECTRAL SLOPE**
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, cache=TRUE}
+
+# RR assignment data `TS1,TS2,TS3`
+L1 <- floor(log2(length(TS1$TS1)))
+L2 <- floor(log2(length(TS2$TS2)))
+L3 <- floor(log2(length(TS2$TS2)))
+
+TS1_FDpsd <- fd_psd(TS1$TS1[1:2^L1])$fitRange$FD
+TS2_FDpsd <- fd_psd(TS2$TS2[1:2^L2])$fitRange$FD
+TS3_FDpsd <- fd_psd(TS3$TS3[1:2^L3])$fitRange$FD
+
+# Logistic map - make it the length of L1
+y1<-growth_ac(r = 2.9,type="logistic",N = 2^L1)
+# Turn standardisation and detrending off!
+TSlogMapr29 <- fd_psd(y1, standardise = FALSE, detrend = FALSE)$fitRange$FD
+y2<-growth_ac(r = 4,type="logistic", N = 2^L1)
+TSlogMapr4 <- fd_psd(y2, standardise = FALSE, detrend = FALSE)$fitRange$FD
+
+TS1R_FDpsd <- fd_psd(TS1Random[1:2^L1])$fitRange$FD
+TS2R_FDpsd <- fd_psd(TS1Random[1:2^L2])$fitRange$FD
+TS3R_FDpsd <- fd_psd(TS1Random[1:2^L3])$fitRange$FD
+
+```
+
+
+* To create the surrogates using `fractal::surrogate()`
+    + You'll need to repeatedly call the function and store the result
+    + To get into a dataframe we have to use `unclass()` otherwise `R` doesn't recognise the object
+    + Function `t()` trnasposes the data from 39 rows to 39 columns
+* Once you have the surrogates in a dataframe, repeatedly calculate the measure you want to compare, in this case `fd_sda()`.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, cache=TRUE}
+# NOW CREATE SURROGATES
+library(dplyr)
+
+# For a two-sided test at alpha = .05 we need N=39
+Nsurrogates <- 39
+
+TS1surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(fractal::surrogate(x=TS1$TS1[1:2^L1] ,method="aaft"))))
+colnames(TS1surrogates) <- paste0("aaftSurr",1:NCOL(TS1surrogates))
+
+TS1surrogates_FD <- laply(1:Nsurrogates,function(s){fd_psd(y=TS1surrogates[,s], silent = TRUE)$fitRange$FD})
+
+
+TS2surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=TS2$TS2[1:2^L2] ,method="aaft"))))
+colnames(TS2surrogates) <- paste0("aaftSurr",1:NCOL(TS2surrogates))
+
+TS2surrogates_FD <- laply(1:Nsurrogates,function(s) fd_psd(y=TS2surrogates[,s], silent = TRUE)$fitRange$FD)
+
+
+TS3surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=TS3$TS3[1:2^L3] ,method="aaft"))))
+colnames(TS3surrogates) <- paste0("aaftSurr",1:NCOL(TS3surrogates))
+
+TS3surrogates_FD <- laply(1:Nsurrogates,function(s) fd_psd(y=TS3surrogates[,s], silent = TRUE)$fitRange$FD)
+
+
+TSr29surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=y1, method="aaft"))))
+colnames(TSr29surrogates) <- paste0("aaftSurr",1:NCOL(TSr29surrogates))
+
+TSr29surrogates_FD <- laply(1:Nsurrogates,function(s) fd_psd(y=TSr29surrogates[,s], silent = TRUE)$fitRange$FD)
+
+
+TSr4surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=y2, method="aaft"))))
+colnames(TSr4surrogates) <- paste0("aaftSurr",1:NCOL(TSr4surrogates))
+
+TSr4surrogates_FD <- laply(1:Nsurrogates,function(s) fd_psd(y=TSr4surrogates[,s], silent = TRUE)$fitRange$FD)
+
+
+```
+
+
+* Call function `plotSUR_hist()` to get the results of the test.
+
+```{r message=FALSE, warning=FALSE,cache=TRUE}
+plotSUR_hist(surrogateValues = TS1surrogates_FD, observedValue = TS1_FDpsd, sides = "two.sided", doPlot = TRUE, measureName = "psd FD TS1")
+
+plotSUR_hist(surrogateValues = TS2surrogates_FD, observedValue = TS2_FDpsd,sides = "two.sided", doPlot = TRUE, measureName = "psd FD TS2")
+
+plotSUR_hist(surrogateValues = TS3surrogates_FD, observedValue = TS3_FDpsd,sides = "two.sided", doPlot = TRUE, measureName = "psd FD TS3")
+
+plotSUR_hist(surrogateValues = TSr29surrogates_FD, observedValue = TSlogMapr29,sides = "two.sided", doPlot = TRUE, measureName = "psd FD logMap r=2.9")
+
+plotSUR_hist(surrogateValues = TSr4surrogates_FD, observedValue = TSlogMapr4, sides = "two.sided", doPlot = TRUE, measureName = "psd FD logMap r=4")
+
+```
+
+
+ * Let's print the results into a table
+ 
+
+```{r message=FALSE, paged.print=TRUE,cache=TRUE}
+x$FDpsd <- c(TS1_FDpsd,TS2_FDpsd,TS3_FDpsd,TSlogMapr29,TSlogMapr4)
+x$FDpsdRandom <- c(TS1R_FDpsd, TS2R_FDpsd, TS3R_FDpsd,NA,NA)
+x$FDpsdAAFT.median <- c(median(TS1surrogates_FD),median(TS2surrogates_FD),median(TS3surrogates_FD),median(TSr29surrogates_FD),median(TSr4surrogates_FD))
+knitr::kable(x, digits = 2, booktabs=TRUE,formt="html")
+```
+
+

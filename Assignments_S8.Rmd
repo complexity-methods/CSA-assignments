@@ -1,0 +1,437 @@
+---
+title: "DCS Assignments Session 8"
+author: "Fred Hasselman"
+date: "1/14/2019"
+output: 
+  bookdown::html_document2: 
+    variant: markdown+hard_line_breaks
+    fig_caption: yes
+    highlight: pygments
+    keep_md: yes
+    number_sections: yes
+    theme: spacelab
+    toc: yes
+    toc_float: true
+    collapsed: false
+    smooth_scroll: true
+    code_folding: show
+    bibliography: [refs.bib, packages.bib]
+    biblio-style: apalike
+    csl: apa.csl
+    includes:
+        before_body: assignmentstyle.html
+    pandoc_args: ["--number-offset","7"]
+    
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(include=TRUE, tidy = FALSE)
+```
+
+
+# **Quick Links** {-}
+
+* [Main Assignments Page](https://darwin.pwo.ru.nl/skunkworks/courseware/1819_DCS/assignments/)
+
+</br>
+</br>
+
+
+# **Complex Networks**
+
+To complete these assignments you need these packages:
+```{r, message=FALSE, warning=FALSE}
+library(igraph)
+library(qgraph)
+library(casnet) # 
+# devtools::install_github("FredHasselman/casnet")
+```
+
+
+* There are many frameworks for analysing and plotting graphs and they are implemented on different platforms often in more-or-less the same way. We'll use the `igraph` framework: https://igraph.org for `R`, but there many more options, see e.g. https://github.com/briatte/awesome-network-analysis#r
+* The manual pages of package `igraph` in `R` provide a lot of information, but not everything the package can do. One thing that is missing are  the parameters available to customise the graphs for plotting. If you can't find something in the `R` manual, have a look at the online documentation: https://igraph.org/r/doc/plot.common.html
+* Package `qgraph` was developped to fit and analyse the so-called `Gaussian Graph Model`, e.g in the symptom network studies. It is built on the `igraph` framework and you can transform `qgraph` output to an `igraph` object using the function `qgraph::as.igraph.qgraph()`
+* The functions in package `casnet` developped to create, analyse and plot **recurrencde networks** are also based on the `igraph` framework. 
+
+
+## Creating, plotting and describing simple graphs {.tabset .tabset-fade .tabset-pills}
+
+We'll start using `igraph` and create some simple graphs. 
+
+To create a small ring graph and plot it run the code below.
+
+```{r}
+gR <- graph.ring(20)
+
+# This will display the igraph structure
+gR
+
+# To plot, simply call:
+plot(gR)
+```
+
+You can request to represent the graph as a so-called *edge-list* which just lists the edges in a graph by reporting the nodes the edge connects *from* - *to*
+
+```{r}
+get.edgelist(gR)
+
+```
+
+Other useful functions are `E()` and `V()` for manipulating attributes of *Edges* (connections) and *Vertices* (nodes). See  https://igraph.org/r/doc/plot.common.html for all available attributes.
+
+```{r}
+# List vertices
+V(gR) 
+# List edges
+E(gR)
+
+# Set vertex color
+V(gR)$color <- "red3"
+# set vertex label
+V(gR)$label.color <- "white"
+# Set vertex shape
+V(gR)$shape <- "square"
+# Set edge color
+E(gR)$color <- "steelblue"
+# Set efge size
+E(gR)$width <- 4
+
+# Plot
+plot(gR)
+```
+
+
+### Questions {-}
+
+* What will be the degree of each node in the ring graph?
+    - To check your answer, look in the manual pages of the `igraph` package for a function that will get you the degree of each node
+    - Also, get the average path length.
+* Create a "small world" graph like the one descibed by [Watts & Strogatz (1998)](https://www.nature.com/articles/30918) and plot it, using the `igraph` function `watts.strogatz.game()`. 
+     - Use dimension `dim = 1`, number of nodes `size = 20`, neighbourhood `nei = 5`, and connection probability `p = .05`
+     - Get the degree, average path length and transitivity of this graph.
+     - `qgraph` has a function called `smallworldness()` that allows you to calculate the so-called *Small Worls Index* [(Humphries & Gurney, 2008)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0002051). Calulate the smallwordlness of the graph, a value `> 1` implies a small world network. 
+     - 
+* Create a directed scale-free graph using `igraph` function `barabasi.game()` with 100 nodes `n=100`.
+     - Get the degree, average path length and transitivity
+     - There should be a power-law relation between the number og nodes that have a specific degree... (but this is a very small network)
+
+
+### Answers {-}
+
+
+```{r}
+# Ring graph degree
+degree(gR)
+
+# avergage path length
+average.path.length(gR)
+```
+
+
+
+```{r}
+# Small world network
+gSW <- igraph::watts.strogatz.game(dim = 1, size = 20, nei = 5, p =0.05)
+
+# Plot
+plot(gSW)
+
+# Degree
+cbind(node = V(gSW), connections = degree(gSW))
+
+# Average path length
+igraph::average.path.length(gSW)
+
+# Transitivity
+igraph::transitivity(gSW)
+
+# Complute the Small World Index, aka 'smallworldness'
+qgraph::smallworldness(gSW)
+```
+
+
+```{r}
+# Scale-free network
+gSF <- barabasi.game(100)
+
+## Change some aesthetics
+# No numbers in nodes
+V(gSF)$name <- ""
+# Change node size
+V(gSF)$size = 5
+# Change Edge size
+E(gSF)$arrow.size = .5
+E(gSF)$arrow.width = .5
+
+
+# Plot
+plot(gSF)
+
+# Degree
+rbind(node = V(gSF), connections = degree(gSF))
+
+# Average path length
+average.path.length(gSF)
+
+# Transitivity
+transitivity(gSF)
+
+## Power-law?
+# Get degree distribution
+dist <- degree_distribution(gSF)
+# Note nonzero elements for log trasnsform
+ID <- dist>0
+# Get an index for node groups
+nodes <- seq_along(dist)
+
+# Fit a line in log-log space
+lf  <- lm(log(dist[ID])~log(nodes[ID]))
+lfit <- predict(lf)
+
+# Plot it!
+plot(nodes,dist,pch=16,log = "xy")
+lines(x = nodes[ID],y = exp(lfit), col="red")
+```
+
+  
+### Small World Index Demo {-}
+
+* Select and run all the code below, this will display three graphs with different topology:
+    + Many 'local' connections, only between neighbouring nodes.
+    + A few nodes with many connections, many nodes with a few connections
+    + Relatively many nodes with many connections, a few nodes with just a few connections
+* The average number of neighbours of the first order (*FON*) for each graph is the same (`7`)
+* The differences between the connectivity are adequately captured by the Small World Index
+  
+The Small World Index is calculated by comparing the average path length and transitiviy of randomly connected graphs, it is similar to a surrogsate test. If you look at the code of function `SWtestE()` you can an idea how it is done.
+
+```{r}
+# Initialize
+set.seed(660)
+layout1=layout.kamada.kawai
+k=3
+n=50
+
+# Setup plots
+op <- par(mfrow=c(1,3),mar= c(5,2,2,2))
+
+# Strogatz rewiring probability = .00001
+p   <- 0.00001
+p1  <- plotNET_SW(n=n,k=k,p=p,doPlot = FALSE)
+p11 <- plot(p1, main="p = 0.00001",
+            layout=layout1,
+            xlab=paste("FON = ",round(mean(neighborhood.size(p1,order=1)),digits=1), "\nSWI = ", round(SWtestE(p1,N=100)$valuesAV$SWI,digits=2)))
+
+# Strogatz rewiring probability = .01
+p   <- 0.01
+p2  <- plotNET_SW(n=n,k=k,p=p,doPlot = FALSE)
+p22 <- plot(p2,main="p = 0.01",layout=layout1,
+            xlab=paste("FON = ",round(mean(neighborhood.size(p2,order=1)),digits=1),"\nSWI = ", round(SWtestE(p2,N=100)$valuesAV$SWI,digits=2)))
+# Strogatz rewiring probability = 1
+p   <- 1
+p3  <- plotNET_SW(n=n,k=k,p=p,doPlot = FALSE)
+p33 <- plot(p3,main="p = 1",layout=layout1,xlab=paste("FON = ",round(mean(neighborhood.size(p3,order=1)),digits=1),"\nSWI = ", round(SWtestE(p3,N=100)$valuesAV$SWI,digits=2)))
+
+# restore graphics parameters
+par(op)
+
+```
+
+
+## Social Networks 
+
+The package `igraph` contains data on a Social network of friendships between 34 members of a karate club at a US university in the 1970s.
+
+> See W. W. Zachary, An information flow model for conflict and fission in small groups, *Journal of Anthropological Research 33*, 452-473 (1977).
+
+
+* Get a graph of the **community structure** within the social network. 
+    - There are many procedures for finding communities, or, subgraphs, in graphs, try to understand how the`walktrap` procedure finds them.
+    - Check the manual pages to figure out what kind of information the functions `sizes`, `communities`, `membership` and `modularity` provide
+    
+
+```{r}
+# Community membership
+karate <- graph.famous("Zachary")
+wc     <- cluster_walktrap(karate)
+plot(wc, karate)
+
+# Measures
+modularity(wc)
+
+sizes(wc)
+communities(wc)
+cbind(node = V(karate) , community = membership(wc))
+
+# Is the structure a hierarchy?
+if(is_hierarchical(wc)){
+  plot(as.dendrogram(wc))
+}
+```
+
+
+* It is also possible to get the adjacency matrix of a graph
+    - What do the columns, rows and 0s and 1s stand for?
+    - Looks a bit like a recurrence matrix, except, the rows and columns don't represent an (embedded) time series 
+
+```{r}
+(am <-get.adjacency(karate))
+
+
+rp_plot(am)
+```
+
+
+## Recurrence Networks {.tabset .tabset-fade .tabset-pills}
+
+Recurrence networks are graphs created from a recurrence matrix. This means the nodes of the graph represent time points and the connections between nodes represent a recurrence relation betwen the values observed at those time points. That is, often the matrix represents recurrences in a reconstructed state space, the values are coordinates and therefore we would say the edges of a recurrence network represent a temporal relation between recurring states. The ultimate reference for learning everything about recurrence networks is:
+
+> [Zou, Y., Donner, R. V., Marwan, N., Donges, J. F., & Kurths, J. (2018). Complex network approaches to nonlinear time series analysis. Physics Reports](https://www.sciencedirect.com/science/article/abs/pii/S037015731830276X?via%3Dihub)
+
+
+Package `casnet` has some functions to create recurrence networks, they are similar to the functions used for CRQA:
+* `rn()` is very similar to `rp()`, it will create a matrix based on embedding parameters. One difference is the option to create a weighted matrix. This is a matrix in which non-recurring values are set to 0, but the recurring values are not replaced by a 1, the distance value is retained and acts as an edge-weight
+* `rn_plot()` will produce the same as `rp_plot()`
+
+We can turn the recurrence matrix into an adjecency matrix, an `igraph` object. This means we can use all the `igraph` functions to calculate network measures.
+
+```{r}
+# Reload the data we used earlier
+series <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/BasicTSA_arma/series.sav", setclass = "tbl_df")
+
+# Lets use a shorter dataset to speed things up
+series <- series[1:500,]
+```
+
+We'll analyse the three time series as a recurrence network:
+* Compare the results, look at the SMall World Index and other measures
+   - Remember: TS_1 was white noise, TS_2 was a sine with added noise, TS_3 was the logistic map in the chaotic regime.
+* Note that some of the RQA measures can be exactly calculated from the measures of the network representation.
+   - Try to understand why the Recurrence is reprented as the *degree centrality() of the network (`igraph::centr_degree()`)
+
+
+### TS 1 {-}
+
+```{r message=FALSE, warning=FALSE}
+#----------------------
+# Adjacency matrix TS_1
+#----------------------
+plot(ts(series$TS_1))
+
+# By passing emRad = NA, a radius will be calculated
+RN1 <- rn(y1 = series$TS_1, emDim = 1, emLag = 1, emRad = NA)
+rn_plot(RN1)
+
+# Get RQA measures
+rqa1 <- crqa_rp(RN1)
+knitr::kable(rqa1,digits = 2)
+
+g1 <- graph_from_adjacency_matrix(RN1, mode="undirected", diag = FALSE)
+g1 <- plotNET_prep(g1)
+
+# Network measures
+average.path.length(g1)
+transitivity(g1)
+smallworldness(g1)
+
+recs1 <- centr_degree(g1)
+
+(RP_N <- sum(recs1$res))
+rqa1$RP_N
+
+RP_N / recs1$theoretical_max
+rqa1$RR
+```
+
+### TS 2 {-}
+
+```{r message=FALSE, warning=FALSE}
+#----------------------
+# Adjacency matrix TS_2
+#----------------------
+plot(ts(series$TS_2))
+
+RN2 <- rn(y1 = series$TS_2, emDim = 1, emLag = 1, emRad = NA)
+rn_plot(RN2)
+
+# Get RQA measures
+rqa2 <- crqa_rp(RN2)
+knitr::kable(rqa2,digits = 2)
+
+g2 <- graph_from_adjacency_matrix(RN2, mode="undirected", diag = FALSE)
+g2 <- plotNET_prep(g2)
+
+# Network measures
+average.path.length(g2)
+transitivity(g2)
+smallworldness(g2)
+
+recs2 <- centr_degree(g2)
+
+(RP_N <- sum(recs2$res))
+rqa2$RP_N
+
+RP_N / recs2$theoretical_max
+rqa2$RR
+```
+
+### TS 3 {-}
+
+```{r message=FALSE, warning=FALSE, paged.print=TRUE}
+#----------------------
+# Adjacency matrix TS_3
+#----------------------
+plot(ts(series$TS_3))
+
+RN3 <- rn(y1 = series$TS_3, emDim = 1, emLag = 1, emRad = NA)
+rn_plot(RN3)
+
+# Get RQA measures
+rqa3 <- crqa_rp(RN3)
+knitr::kable(rqa3,digits = 2)
+
+g3 <- graph_from_adjacency_matrix(RN3, mode="undirected", diag = FALSE)
+g3 <- plotNET_prep(g3)
+
+average.path.length(g3)
+transitivity(g3)
+smallworldness(g3)
+
+recs3 <- centr_degree(g3)
+
+(RP_N <- sum(recs3$res))
+rqa3$RP_N
+
+RP_N / recs3$theoretical_max
+rqa3$RR
+```
+
+
+
+
+
+## Symptom Networks: Package `qgraph`
+
+Learn about the functionality of the `qgraph` frm its author Sacha Epskamp.
+
+Try running the examples, e.g. of the `Big 5`: 
+
+[http://sachaepskamp.com/qgraph/examples](http://sachaepskamp.com/qgraph/examples)
+
+
+### `qgraph` tutorials / blog
+
+Great site by Eiko Fried:
+[http://psych-networks.com ](http://psych-networks.com )
+
+
+
+
+<!-- ## Early Warnings -->
+
+<!-- Have a look at the site [Early Warning Systems](http://www.early-warning-signals.org/home/) -->
+
+<!-- There is an accompanying [`R` package `earlywarnings`](https://cran.r-project.org/web/packages/earlywarnings/index.html) -->
+
+
