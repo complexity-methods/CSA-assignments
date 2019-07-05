@@ -27,9 +27,7 @@ editor_options:
 ---
 
 
-```{r, include=FALSE}
-knitr::opts_chunk$set(include=TRUE, tidy = FALSE)
-```
+
 
 
 # **Basic Nonlinear Timeseries Analysis** 
@@ -44,7 +42,8 @@ A qualitative description of the fractal dimension of a time series (or 1D curve
 As can be seen in the figure below, if slow processes (low frequencies) dominate the signal, they are more *line-like* and will have a fractal dimension closer to `1`. If fast processes (high frequencies) dominate the signal, they are more *plane-like* and will have a fractal dimension closer to `2`. 
 
 
-```{r fig.height=10}
+
+```r
 library(casnet)
 library(plyr)
 
@@ -56,8 +55,9 @@ names(yy) <- noises
 tmp<- data.frame(yy,check.names = FALSE)
 
 plotTS_multi(tmp, ylabel = "log-log slope")
-
 ```
+
+![](ASSIGNMENTS_D2_basicNLTSA_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
 
 
@@ -77,7 +77,8 @@ A. By downloading:
   3. Download the file
   4. Load it into `R` using the code below
 
-```{r, eval=FALSE}
+
+```r
 library(rio)
 series <- rio::import("series.csv")
 ```
@@ -89,7 +90,8 @@ B. By importing from Github:
    2. The copied path should contain the word 'raw' somewhere in the url.
    3. Call `rio::import(url)`
 
-```{r}
+
+```r
 library(rio)
 series <- rio::import("https://github.com/complexity-methods/CSA-assignments/raw/master/assignment_data/BasicTSA_arma/series.csv")
 ```
@@ -110,9 +112,10 @@ We're living in a powder keg and giving off sparks"
 Use Figure \@ref(fig:RRf3) to lookup which value of $RR$ corresponds to which type of dynamics:
 
 
-```{r RRf3, fig.cap="Coloured Noise versus Relative Roughness", fig.align='center',echo=FALSE, include=TRUE}
-knitr::include_graphics('images/RRfig3.png')
-```
+<div class="figure" style="text-align: center">
+<img src="images/RRfig3.png" alt="Coloured Noise versus Relative Roughness" width="793" />
+<p class="caption">(\#fig:RRf3)Coloured Noise versus Relative Roughness</p>
+</div>
 
 
 
@@ -135,45 +138,84 @@ Use the `sample_entropy()` function in package `pracma`.
 
 Change some of the parameters.
 
-```{r,collapse=TRUE}
+
+```r
 library(rio)
 library(pracma)
+## 
+## Attaching package: 'pracma'
+## The following object is masked from 'package:casnet':
+## 
+##     repmat
 
 # ACF assignment data `series`
 cat(paste0("\nseries.TS1 m=3\n",sample_entropy(series$TS_1, edim = 3, r = sd(series$TS_1))))
+## 
+## series.TS1 m=3
+## 0.652582760511648
 cat(paste0("\nseries.TS2 m=3\n",sample_entropy(series$TS_2, edim = 3, r = sd(series$TS_2))))
+## 
+## series.TS2 m=3
+## 0.195888185092471
 cat(paste0("\nseries.TS3 m=3\n",sample_entropy(series$TS_3, edim = 3, r = sd(series$TS_3))))
+## 
+## series.TS3 m=3
+## 0.528115883767288
 
 
 # ACF assignment data `series`
 cat(paste0("\nseries.TS1 m=6\n",sample_entropy(series$TS_1, edim = 6, r = sd(series$TS_1))))
+## 
+## series.TS1 m=6
+## 0.676004479826967
 cat(paste0("\nseries.TS2 m=6\n",sample_entropy(series$TS_2, edim = 6, r = sd(series$TS_2))))
+## 
+## series.TS2 m=6
+## 0.167801266934409
 cat(paste0("\nseries.TS3 m=6\n",sample_entropy(series$TS_3, edim = 6, r = sd(series$TS_3))))
+## 
+## series.TS3 m=6
+## 0.527677852462416
 
 
 # ACF assignment data `series`
 cat(paste0("\nseries.TS1 m=6, r=.5\n",sample_entropy(series$TS_1, edim = 3, r = .5*sd(series$TS_1))))
+## 
+## series.TS1 m=6, r=.5
+## 1.26945692316692
 cat(paste0("\nseries.TS2 m=6, r=.5\n",sample_entropy(series$TS_2, edim = 3, r = .5*sd(series$TS_2))))
+## 
+## series.TS2 m=6, r=.5
+## 0.641584864066123
 cat(paste0("\nseries.TS3 m=6, r=.5\n",sample_entropy(series$TS_3, edim = 3, r = .5*sd(series$TS_3))))
-
+## 
+## series.TS3 m=6, r=.5
+## 0.5894301000077
 ```
 
 The change of `m` keeps the relative order, change of `r` for the same `m` does not.
 
 **Values of other time series**
 
-```{r message=FALSE, warning=FALSE, collapse=TRUE}
+
+```r
 
 # Logistic map
 library(casnet)
 cat("\nLogistic map\nr=2.9\n")
+## 
+## Logistic map
+## r=2.9
 y1<-growth_ac(r = 2.9,type="logistic")
 sample_entropy(y1, edim = 3, r = sd(y1))
+## [1] 0.0002390343
 cat("\nLogistic map\nr=4\n")
+## 
+## Logistic map
+## r=4
 y2<-growth_ac(r = 4,type="logistic")
 sample_entropy(y2, edim = 3, r = sd(y2))
-
-
+## [1] 0.5293149
 ```
 
 
