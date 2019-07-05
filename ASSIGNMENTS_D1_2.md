@@ -1,6 +1,6 @@
 ---
-title: "DCS Assignments Session 1 & 2"
-author: "Fred Hasselman & Maarten Wijnants"
+title: "Math of Change Assignments"
+author: "Fred Hasselman"
 date: "1/14/2019"
 output: 
   bookdown::html_document2: 
@@ -230,7 +230,7 @@ plot(linearMap(Y0=0.1,r=1.08,N=100), type = "l")
 plot(linearMap(Y0=0.1,r=1.08,N=100), type = "l")
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 `R` and `Matlab` have specialized objects to represent time series, and functions and packages for time series analysis. These are especially convenient for plotting time and date information on the X-axis. See the examples on plotting [time series in `R` in Chapter 2](https://darwin.pwo.ru.nl/skunkworks/courseware/1819_DCS/02-MathematicsofChange.html#plotTS).
   
@@ -451,7 +451,7 @@ op<-par(mfrow=c(2,3))
 l_ply(rs,function(r) plot(logisticMap(r=r),ylab = paste("r =",r) ,type = "l"))
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 
 ```r
 par(op)
@@ -470,7 +470,7 @@ op <- par(mfrow = c(2,2), pty = "s")
 l_ply(lags, function(l) {plot(dplyr::lag(logisticMap(r=4,N=N),l), logisticMap(r=4,N=N), pch = ".", xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = "Y(t+1)",  main = paste("lag =",l))})
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
 ```r
 par(op)
@@ -562,7 +562,7 @@ l_ply(Ks, function(k) plot(vanGeert(r=2.9,K=k),ylab = paste("r = 2.9 | K =",k) ,
 par(op)
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
 
     + Make a lag 1 return plot.
 
@@ -574,7 +574,7 @@ op <- par(mfrow = c(2,2), pty = "s")
 l_ply(lags, function(l) {plot(dplyr::lag(vanGeert(r=2.9,N=N),l), vanGeert(r=2.9,N=N), pch = ".", xlim = c(0,3), ylim = c(0,3), xlab = "Y(t)", ylab = "Y(t+1)",  main = paste("lag =",l))})
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
 
 ```r
 par(op)
@@ -661,7 +661,7 @@ library(lattice)
 xyplot(vanGeert.jump(),ylab = "Change r to 2 if L >= 0.2")
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
 
 
 The code below defines the function in such a way that we can add more than one conditional statement.
@@ -699,7 +699,7 @@ library(lattice)
 xyplot(vanGeert.cond())
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
 
 The 'trick' used here is to define the function such that it can take a set of conditional rules and apply them sequentially during the iterations. The conditional rule is passed as a `data.frame`, but one could also use a `list` object. 
 
@@ -721,7 +721,7 @@ points(which(vanGeert.cond(cond=cond)>0.6)[1],0.6,col="red",pch=16)
 legend(60,1,legend = c("L>0.2 - change r to 0.5","L>0.6 - change r to .1"),col = c("red","red"),pch=16)
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
 
 
 </br>
@@ -758,7 +758,7 @@ points(which(vanGeert.cond(cond=cond)>0.99)[1],0.99,col="red",pch=16)
 legend(60,1, legend = "L>0.99 - change r to 2", col = "red", pch=16)
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
 
 
 Or, combine a change of `r` and a change of `k`
@@ -784,7 +784,7 @@ points(which(vanGeert.cond(r=0.2,cond=cond)>cond$L[4])[1],cond$L[4],col="blue",p
 legend(60,1,legend = paste0("L>",cond$L," - change ",cond$par," to ",cond$val),col = c("red","blue"),pch=c(21,46), pt.cex = c(1,4))
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
 
 ```r
 # A fantasy growth process
@@ -804,7 +804,7 @@ legend(60,1,legend = paste0("L>",cond$L," - change ",cond$par," to ",cond$val),c
 xyplot(vanGeert.cond(cond=cond))
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-23-2.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-23-2.png)<!-- -->
 
 
 ### Growth models in package `casnet`
@@ -833,7 +833,7 @@ Y <- growth_ac(r = 1.1)
 plot(Y)
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
 
 Some notes about this function:
 
@@ -986,7 +986,7 @@ legend(50, .8, c("B will support A by adding .5*B",
        lwd = rep(2,3), lty = c(1:3), col = c("darkred","darkblue","darkgreen"), merge = TRUE)
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
 
 
 * This would be the *not-so-dynamical* way to do it:
@@ -1022,7 +1022,7 @@ legend(1, 3.8, c("Y1(0):  r = .2",
        lwd = rep(2,3), lty = c(1:3), col = c("darkred","darkblue","darkgreen"), merge = TRUE)
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-29-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-29-1.png)<!-- -->
 
 
 ### Other demonstrations of dynamic modeling using spreadsheets
@@ -1158,13 +1158,13 @@ l_ply(seq_along(R), function(t){
 xyplot(cbind(ts(R),ts(F)))
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-30-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-30-1.png)<!-- -->
 
 ```r
 xyplot(R ~ F, pch = 16)
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-30-2.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-30-2.png)<!-- -->
 
 
 ### **Growth functions in continuous time**
@@ -1230,7 +1230,7 @@ legend(70, 5, c(paste("Euler: delta =",deltas),"Analytic solution (t/30)"),
        merge = TRUE, cex = .8)
 ```
 
-![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
+![](ASSIGNMENTS_D1_2_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
 
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">If you want to learn how to put mathematical operators in legends and axes using `expression()`, see the webpage [Mathematical Annotation in R](http://vis.supstat.com/2013/04/mathematical-annotation-in-r/)</div>\EndKnitrBlock{rmdnote}
 

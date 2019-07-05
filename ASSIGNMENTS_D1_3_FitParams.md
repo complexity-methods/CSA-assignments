@@ -1,6 +1,6 @@
 ---
-title: "DCS Assignments Session 3"
-author: "Fred Hasselman & Maarten Wijnants"
+title: "Day1 Intro Math of Change: Fitting Parameters of Analytic Solutions [Extra]"
+author: "Fred Hasselman"
 date: "1/14/2019"
 output: 
   bookdown::html_document2: 
@@ -21,27 +21,18 @@ output:
     csl: apa.csl
     includes:
         before_body: assignmentstyle.html
-    pandoc_args: ["--number-offset","2"]
+    pandoc_args: ["--number-offset","0"]
 
 ---
 
 
 
 
-# **Quick Links** {-}
-
-* [Main Assignments Page](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/)
-
-<!-- * [Assignments Part 1A: Introduction to the mathematics of change](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1A.html) -->
-<!-- * [Assignments Part 2: Time Series Analysis: Temporal Correlations and Fractal Scaling](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html) -->
-<!-- * [Assignments Part 3: Quantifying Recurrences in State Space](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html) -->
-<!-- * [Assignments Part 4: Complex Networks](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html) -->
-
 <!-- </br> -->
 <!-- </br> -->
 
 
-# **Fitting Parameters of Analytic Solutions [EXTRA}**
+# **Fitting Parameters of Analytic Solutions [EXTRA]**
 
 
 ## **Nonlinear Growth curves**
@@ -225,7 +216,7 @@ plot(ts(df$Yt), col="gray40", lwd=5, ylab = ("Yt | Ypred"))
 lines(Ypred, col="gray80", lwd=2, lty=2)
 ```
 
-![](ASSIGNMENTS_P1B_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](ASSIGNMENTS_D1_3_FitParams_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 Then we do a polynomial regression using `lm`:
 
@@ -275,7 +266,7 @@ plot(ts(Ypoly), col="blue1", lwd=2, ylab = ("Ypoly (blue) | Ypred (red)"))
 lines(Ypred, col="red1", lwd=2)
 ```
 
-![](ASSIGNMENTS_P1B_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](ASSIGNMENTS_D1_3_FitParams_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 SPSS computes an $r^2$ value for non-linear regression models, which doesn't make a lot of sense if you think about it. Here we van just compare the residual errors:
 
@@ -283,66 +274,5 @@ SPSS computes an $r^2$ value for non-linear regression models, which doesn't mak
 * Analytic solution: $0.002865$
 
 Slightly less residual error for the analytic solution, using less parameters to fit the model (3 vs. 5). **More important:**, the parameters of the analytic solution have a direct interpretation in terms of growth processes.
-
-
-
-
-
-
-
-<!-- # **Potential Functions** -->
-
-
-<!-- ### The Phoneme Boundary Model {.tabset .tabset-fade .tabset-pills} -->
-
-<!-- In this assignment we will look at the potential function used to study speech perception in these studies: -->
-
-<!-- [Tuller, B., Case, P., Ding, M., & Kelso, J. A. (1994). The nonlinear dynamics of speech categorization. Journal of Experimental Psychology: Human perception and performance, 20(1), 3.](https://s3.amazonaws.com/academia.edu.documents/41486712/The_Nonlinear_Dynamics_of_Speech_Categor20160123-5343-1c1fpf2.pdf?AWSAccessKeyId=AKIAIWOWYYGZ2Y53UL3A&Expires=1518665892&Signature=B2jjfU7EbMTFATVYtiZxYAxw608%3D&response-content-disposition=inline%3B%20filename%3DThe_nonlinear_dynamics_of_speech_categor.pdf) -->
-
-<!-- [Case, P., Tuller, B., Ding, M., & Kelso, J. S. (1995). Evaluation of a dynamical model of speech perception. Perception & Psychophysics, 57(7), 977-988.](https://link.springer.com/content/pdf/10.3758%2FBF03205457.pdf) -->
-
-<!-- You do not have to read these articles to do the assignment, but they do provide a great introduction to the kind phenomena you can study empirically, guided by a formal model, without fitting model parameters to data. For example, the model predicts phenomena that are unexpected and inexplicable by other theories of speech perception (e.g. hysteresis), most prominent, if the boundary is approached and the same stimulus is presented a number of times, a switch in perception occurs as if the phoneme boundary is crossed. *Prospective prediction by simulation* is an excellent way to test the plausibility of a model. -->
-
-<!-- #### Questions {-} -->
-
-<!-- Have a look at [the spreadsheet in which the model is implemented](https://docs.google.com/spreadsheets/d/1L6mpHx9SewGGfjValMJ2CzQz3uzOx1PWNaNVnZ4zkew/edit?usp=sharing), copy it, and see how the function changes with values of parameter `k` (between $-1$ and $1$, be sure to check $0$. Note that this is not an iterative function, `V` is 'just' a function of `x`. -->
-
-<!-- * Create the function in `R` -->
-<!--     + remember, no iteration needed! -->
-<!--     + plot the shape for different values of `k`, use $-1,\ -0.5,\ 0 0.5,\ 1$  -->
-
-<!-- #### Answers {-} -->
-
-<!-- ```{r} -->
-<!-- # Variable k -->
-<!-- ks = c(-1,-.5,0,.5,1) -->
-<!-- x = seq(-2,2,by=.1) -->
-<!-- # the function -->
-<!-- V <- function(x, k){return(k*x -.5*x^2 + .25*x^4)} -->
-
-<!-- # Plot x against V -->
-<!-- op<-par(mfrow=c(1,5)) -->
-<!-- for(k in ks){ -->
-<!--   plot(x,V(x,k),type="l",xlim=c(-2,2),ylim=c(-1.5,2),frame.plot =FALSE,lwd=2) -->
-<!--   abline(h=0,v=0,col="grey") -->
-<!--   } -->
-<!-- par(op) -->
-
-<!-- ``` -->
-
-
-<!-- ### A model of risky choice -->
-
-<!-- Have a look at the paper below, it uses a potential function to model non-linear dynamics in decision making and fits model parameters based on experimental data: -->
-
-<!-- [van Rooij, M. M., Favela, L. H., Malone, M., & Richardson, M. J. (2013). Modeling the dynamics of risky choice. Ecological Psychology, 25(3), 293-303.](http://www.tandfonline.com/doi/abs/10.1080/10407413.2013.810502) -->
-
-<!-- See e.g. p 299 and beyond... -->
-
-
-<!-- More details [in her PhD thesis](https://etd.ohiolink.edu/!etd.send_file?accession=ucin1382951052&disposition=inline). -->
-
-
-
 
 
