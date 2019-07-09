@@ -35,7 +35,7 @@ editor_options:
 Many nonlinear analyses can be considered "descriptive" techniques, that is, the aim is not to fit the parameters of a model, but to describe, quantitatively, some aspects of how one value changes into another value over time.
 
 
-## Intuitive notion of Fractal Dimension
+### Intuitive notion of Fractal Dimension {-}
 
 A qualitative description of the fractal dimension of a time series (or 1D curve) can be given by deciding whether the curve looks/behaves like a line, or, like a plane. 
 
@@ -54,16 +54,15 @@ yy <- llply(noises, function(a){cbind(noise_powerlaw(alpha = a, N = 512, seed = 
 names(yy) <- noises
 tmp<- data.frame(yy,check.names = FALSE)
 
-plotTS_multi(tmp, ylabel = "log-log slope")
+plotTS_multi(tmp, ylabel = "Scaling exponent alpha")
 ```
 
 ![](ASSIGNMENTS_D2_basicNLTSA_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
 
+## Three time series
 
-
-
-We are going to analyse 3 different time series using different techniques. The goal is to describe the dynamics, temporal patterns (if any) and perhaps other characteristics of these time series.
+We are going to analyse 3 different time series using different techniques. The goal is to describe the dynamics, temporal patterns (if any) and perhaps other interesting characteristics of these time series.
 
 
 **Importing data**
@@ -72,42 +71,55 @@ Two ways:
 
 A. By downloading:
 
-  1. Follow the link, e.g. for [`series.sav`](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.csv).
+  1. Follow the link, e.g. for [`series.sav`](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.xlsx).
   2. On the Github page, find a button marked **Download** (or **Raw** for textfiles).
   3. Download the file
-  4. Load it into `R` using the code below
+  4. Load it into `R` using the code below       
 
 
 ```r
 library(rio)
-series <- rio::import("series.csv")
+series <- rio::import("series.xlsx")
 ```
-
-
+     
+      
 B. By importing from Github:
 
    1. Copy the `url` associated with the **Download**  button [on Github](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.csv) (right-clik).
    2. The copied path should contain the word 'raw' somewhere in the url.
    3. Call `rio::import(url)`
-
+        
 
 ```r
 library(rio)
-series <- rio::import("https://github.com/complexity-methods/CSA-assignments/raw/master/assignment_data/BasicTSA_arma/series.csv")
+series <- rio::import("https://github.com/complexity-methods/CSA-assignments/raw/master/assignment_data/BasicTSA_arma/series.xlsx")
 ```
 
 
 
+### Relative Roughness   {.tabset .tabset-fade .tabset-pills}
 
 
-### Relative Roughness of the Heart   {.tabset .tabset-fade .tabset-pills}
+#### Questions {-}
 
-> "We can take it to the end of the line
-Your love is like a shadow on me all of the time (all of the time)
-I don't know what to do and I'm always in the dark
-We're living in a powder keg and giving off sparks"
->
-> --- Bonnie Tyler/James R. Steinman, Total Eclipse of the Heart
+*	Construct a graphical representation of the time series, and inspect their dynamics visually (plot the time series).
+* Write down your first guesses (i.e., which one looks more like a line than a plane, which one looks more 'smooth' than 'rough'?).
+*	Next, explore some measures of central tendency and dispersion (calculate the mean, variance standard deviation)
+*	Compute the Relative Roughness for each time series.
+   - You can try to figure it out for yourself by using Equation \@ref(eq:RR)
+   - There is also a function in `casnet` that will do everything for you: `fd_RR()`
+
+
+\begin{equation}
+RR = 2\left[1 + \frac{\gamma_1(x_i)}{Var(x_i)}\right]
+(\#eq:RR)
+\end{equation}
+
+The numerator in the formula stands for the `lag 1` autocovariance of the HBI time series $x_i$. The denominator stands for the (global) variance of $x_i$. Most statistics packages can calculate these variances, `R` and `Matlab` have built in functions. Alternatively, you can create the formula yourself.
+
+
+
+* Calculate the Relative Roughness of the 2 time series using function `fd_RR`
 
 Use Figure \@ref(fig:RRf3) to lookup which value of $RR$ corresponds to which type of dynamics:
 

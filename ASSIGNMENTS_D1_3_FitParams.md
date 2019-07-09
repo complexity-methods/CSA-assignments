@@ -12,7 +12,7 @@ output:
     number_sections: yes
     theme: spacelab
     toc: yes
-    toc_float: false
+    toc_float: true
     collapsed: false
     smooth_scroll: true
     code_folding: show
