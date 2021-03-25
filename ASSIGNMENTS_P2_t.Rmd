@@ -142,7 +142,7 @@ colnames(TS3) <- "TS3"
 ```
 
 ### The recordings
-These HBI???s were constructed from the R-R intervals in electrocardiogram (ECG) recordings, as defined in Figure \@ref(fig:RRf1).
+These HBIs were constructed from the R-R intervals in electrocardiogram (ECG) recordings, as defined in Figure \@ref(fig:RRf1).
 
 ```{r RRf1, fig.cap="Definition of Heart Beat Periods.", fig.align='center',echo=FALSE, include=TRUE}
 knitr::include_graphics('images/RRfig1.png')

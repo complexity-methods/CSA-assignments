@@ -169,7 +169,7 @@ This `crqa_parameters()` function will call several other functions (e.g. `fract
 #### Answers {-}
 
 * Use `lx <- lorenz[1:2048,1]` to reconstruct the phase space based on `lx`. 
-    + Find an optimal embedding lag and dimension by calling `crqa_parameters()`.
+    + Find an optimal embedding lag and dimension by calling `est_parameters()`.
 
 ```{r}
 library(rgl)
@@ -182,7 +182,7 @@ library(casnet)
 lx <- lorenz[1:2048,1]
 
 # Search for the parameters,
-params <- crqa_parameters(lx)
+params <- est_parameters(lx)
 
 # Assign the optimal parameters
 emLag <- params$optimLag

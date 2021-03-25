@@ -31,37 +31,39 @@ editor_options:
 # **Fluctuation and Disperion analyses** {-}
 
     
-     
-     
+### Three time series {-}
+
+We are going to analyse the same 3 time series as last session, now using fluctuation and dispersion analysis. 
+
 **Importing data**
 
 Two ways:
 
 A. By downloading:
 
-  1. Follow the link, e.g. for [`noises.xlsx`](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/noises.xlsx).
-  2. On the Github page, find a button marked **Download** (or **Raw** for textfiles).
+  1. Follow the link, e.g. for [`series.xlsx`](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.xlsx).
+  2. On the Github page, find a button marked **Download** (or **Raw** for text files).
   3. Download the file
   4. Load it into `R` using the code below       
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 library(rio)
-noises <- rio::import("noises.xlsx")
+series <- rio::import("series.xlsx")
 ```
      
       
-B. By importing from Github:
+B. By directly importing the file in R from Github:
 
-   1. Copy the `url` associated with the **Download**  button [on Github](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/noises.xlsx) (right-clik).
+   1. Copy the `url` associated with the **Download**  button [on Github](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.csv) (right-click).
    2. The copied path should contain the word 'raw' somewhere in the url.
-   3. Call `rio::import(url)`     
-   
+   3. Call `rio::import(url)`
         
-```{r,eval=TRUE}
+```{r,eval=FALSE}
 library(rio)
-noises <- rio::import("https://github.com/complexity-methods/CSA-assignments/raw/master/assignment_data/BasicTSA_arma/noises.xlsx")
+series <- rio::import("https://github.com/complexity-methods/CSA-assignments/raw/master/assignment_data/BasicTSA_arma/series.xlsx")
 ```
-       
+
+
         
         
       
@@ -83,9 +85,9 @@ noises <- rio::import("https://github.com/complexity-methods/CSA-assignments/raw
 ```{r collapse=TRUE, message=FALSE, warning=FALSE}
 library(casnet)
 
-fdS1 <- fd_sda(noises$TS_1, returnPLAW = TRUE)
-fdS2 <- fd_sda(noises$TS_2, returnPLAW = TRUE)
-fdS3 <- fd_sda(noises$TS_3, returnPLAW = TRUE)
+fdS1 <- fd_sda(series$TS_1, returnPLAW = TRUE)
+fdS2 <- fd_sda(series$TS_2, returnPLAW = TRUE)
+fdS3 <- fd_sda(series$TS_3, returnPLAW = TRUE)
 
 # If you asked to return the powerlaw (returnPLAW = TRUE) the function plotFD_loglog() can make a plot
 plotFD_loglog(fdS1,title = "SDA", subtitle = "Series 1")
@@ -157,10 +159,10 @@ plotFD_loglog(fdS3,title = "SDA", subtitle = "Series 3")
 
 ```{r collapse=TRUE,cache=TRUE, message=FALSE, warning=FALSE}
 
-fdS1 <- fd_psd(noises$TS_1, doPlot = TRUE)
-fdS2 <- fd_psd(noises$TS_2, returnPLAW = TRUE)
+fdS1 <- fd_psd(series$TS_1, doPlot = TRUE)
+fdS2 <- fd_psd(series$TS_2, returnPLAW = TRUE)
 plotFD_loglog(fdS2,subtitle = "Series 2")
-fdS3 <- fd_psd(noises$TS_3, returnPLAW = TRUE)
+fdS3 <- fd_psd(series$TS_3, returnPLAW = TRUE)
 plotFD_loglog(fdS3,subtitle = "Series 3")
 
 ```
@@ -228,10 +230,10 @@ plotFD_loglog(fdS3,subtitle = "Series 3")
 
 ```{r collapse=TRUE,cache=TRUE, message=FALSE, warning=FALSE}
 
-fdS1 <- fd_dfa(noises$TS_1, doPlot = TRUE)
-fdS2 <- fd_dfa(noises$TS_2, returnPLAW = TRUE)
+fdS1 <- fd_dfa(series$TS_1, doPlot = TRUE)
+fdS2 <- fd_dfa(series$TS_2, returnPLAW = TRUE)
 plotFD_loglog(fdS2,subtitle = "Series 2")
-fdS3 <- fd_dfa(noises$TS_3, returnPLAW = TRUE)
+fdS3 <- fd_dfa(series$TS_3, returnPLAW = TRUE)
 plotFD_loglog(fdS3,subtitle = "Series 3")
 
 ```
@@ -319,14 +321,14 @@ Create a number of surrogates, calulate the slopes and plot the results.
 library(fractal)
 
 # RR assignment data `TS1,TS2,TS3`
-# Now we'll trim the time noises length to a power of 2 to get the cleanest results, this is not strictly necessary 
-L1 <- floor(log2(length(noises$TS_1)))
-L2 <- floor(log2(length(noises$TS_2)))
-L3 <- floor(log2(length(noises$TS_3)))
+# Now we'll trim the time series length to a power of 2 to get the cleanest results, this is not strictly necessary 
+L1 <- floor(log2(length(series$TS_1)))
+L2 <- floor(log2(length(series$TS_2)))
+L3 <- floor(log2(length(series$TS_3)))
 
-TS1_FDsda <- fd_sda(noises$TS_1[1:2^L1])$fitRange$FD
-TS2_FDsda <- fd_sda(noises$TS_2[1:2^L2])$fitRange$FD
-TS3_FDsda <- fd_sda(noises$TS_3[1:2^L3])$fitRange$FD
+TS1_FDsda <- fd_sda(series$TS_1[1:2^L1])$fitRange$FD
+TS2_FDsda <- fd_sda(series$TS_2[1:2^L2])$fitRange$FD
+TS3_FDsda <- fd_sda(series$TS_3[1:2^L3])$fitRange$FD
 
 # y1<-growth_ac(r = 2.9,type="logistic",N = 2^L1)
 # TSlogMapr29 <- fd_sda(y1)$fitRange$FD
@@ -357,11 +359,11 @@ library(fractal)
 # For a two-sided test at alpha = .05 we need N=39
 Nsurrogates <- 39
 
-TS1surrogates <- as.data.frame(t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=noises$TS_1[1:2^L1] ,method="aaft")))))
+TS1surrogates <- as.data.frame(t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=series$TS_1[1:2^L1] ,method="aaft")))))
 colnames(TS1surrogates) <- paste0("S",1:NCOL(TS1surrogates))
 
 # Add the observed data
-TS1surrogates$Obs <- noises$TS_1[1:2^L1]
+TS1surrogates$Obs <- series$TS_1[1:2^L1]
 plotTS_multi(TS1surrogates)
 ````
 
@@ -371,13 +373,13 @@ library(fractal)
 # Now we calculate FD for each series
 TS1surrogates_FD <- plyr::laply(1:Nsurrogates,function(s) fd_sda(y=TS1surrogates[,s], silent = TRUE)$fitRange$FD)
 
-TS2surrogates <- t(plyr::ldply(1:Nsurrogates, function(s) unclass(surrogate(x=noises$TS_2[1:2^L2] ,method="aaft"))))
+TS2surrogates <- t(plyr::ldply(1:Nsurrogates, function(s) unclass(surrogate(x=series$TS_2[1:2^L2] ,method="aaft"))))
 colnames(TS2surrogates) <- paste0("aaftSurr",1:NCOL(TS2surrogates))
 
 TS2surrogates_FD <- plyr::laply(1:Nsurrogates,function(s) fd_sda(y=TS2surrogates[,s], silent = TRUE)$fitRange$FD)
 
 
-TS3surrogates <- t(plyr::ldply(1:Nsurrogates, function(s) unclass(surrogate(x=noises$TS_3[1:2^L3] ,method="aaft"))))
+TS3surrogates <- t(plyr::ldply(1:Nsurrogates, function(s) unclass(surrogate(x=series$TS_3[1:2^L3] ,method="aaft"))))
 colnames(TS3surrogates) <- paste0("aaftSurr",1:NCOL(TS3surrogates))
 
 TS3surrogates_FD <- plyr::laply(1:Nsurrogates,function(s) fd_sda(y=TS3surrogates[,s], silent = TRUE)$fitRange$FD)
@@ -425,13 +427,13 @@ plotSUR_hist(surrogateValues = TS3surrogates_FD, observedValue = TS3_FDsda,sides
 ```{r echo=TRUE, message=FALSE, warning=FALSE, cache=TRUE}
 
 # RR assignment data `TS1,TS2,TS3`
-L1 <- floor(log2(length(noises$TS_1)))
-L2 <- floor(log2(length(noises$TS_2)))
-L3 <- floor(log2(length(noises$TS_2)))
+L1 <- floor(log2(length(series$TS_1)))
+L2 <- floor(log2(length(series$TS_2)))
+L3 <- floor(log2(length(series$TS_2)))
 
-TS1_FDpsd <- fd_psd(noises$TS_1[1:2^L1])$fitRange$FD
-TS2_FDpsd <- fd_psd(noises$TS_2[1:2^L2])$fitRange$FD
-TS3_FDpsd <- fd_psd(noises$TS_3[1:2^L3])$fitRange$FD
+TS1_FDpsd <- fd_psd(series$TS_1[1:2^L1])$fitRange$FD
+TS2_FDpsd <- fd_psd(series$TS_2[1:2^L2])$fitRange$FD
+TS3_FDpsd <- fd_psd(series$TS_3[1:2^L3])$fitRange$FD
 
 # # Logistic map - make it the length of L1
 # y1<-growth_ac(r = 2.9,type="logistic",N = 2^L1)
@@ -460,19 +462,19 @@ library(dplyr)
 # For a two-sided test at alpha = .05 we need N=39
 Nsurrogates <- 39
 
-TS1surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(fractal::surrogate(x=noises$TS_1[1:2^L1] ,method="aaft"))))
+TS1surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(fractal::surrogate(x=series$TS_1[1:2^L1] ,method="aaft"))))
 colnames(TS1surrogates) <- paste0("aaftSurr",1:NCOL(TS1surrogates))
 
 TS1surrogates_FD <- laply(1:Nsurrogates,function(s){fd_psd(y=TS1surrogates[,s], silent = TRUE)$fitRange$FD})
 
 
-TS2surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=noises$TS_2[1:2^L2] ,method="aaft"))))
+TS2surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=series$TS_2[1:2^L2] ,method="aaft"))))
 colnames(TS2surrogates) <- paste0("aaftSurr",1:NCOL(TS2surrogates))
 
 TS2surrogates_FD <- laply(1:Nsurrogates,function(s) fd_psd(y=TS2surrogates[,s], silent = TRUE)$fitRange$FD)
 
 
-TS3surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=noises$TS_3[1:2^L3] ,method="aaft"))))
+TS3surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=series$TS_3[1:2^L3] ,method="aaft"))))
 colnames(TS3surrogates) <- paste0("aaftSurr",1:NCOL(TS3surrogates))
 
 TS3surrogates_FD <- laply(1:Nsurrogates,function(s) fd_psd(y=TS3surrogates[,s], silent = TRUE)$fitRange$FD)

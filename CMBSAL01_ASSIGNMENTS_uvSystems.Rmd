@@ -1,0 +1,984 @@
+---
+title: "Mathematics of Change"
+author: "Fred Hasselman"
+date: "17/12/2020"
+output: 
+  bookdown::html_document2: 
+    variant: markdown+hard_line_breaks
+    fig_caption: yes
+    highlight: pygments
+    keep_md: no
+    number_sections: yes
+    self_contained: yes
+    theme: spacelab
+    toc: yes
+    toc_float: true
+    collapsed: false
+    smooth_scroll: true
+    code_folding: show
+    bibliography: [refs.bib, packages.bib]
+    biblio-style: apalike
+    csl: apa.csl
+    includes:
+        before_body: assignmentstyle.html
+    pandoc_args: ["--number-offset","0"]
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(include=TRUE, tidy = FALSE)
+```
+
+# **Univariate Models and Deterministic Chaos**
+
+
+```{block2, type='rmdimportant'}
+* Watch [**Assignment Lecture 01**](https://youtu.be/CvDFuw8ou80) video before you make these assignments.
+* [Chapter 3: **Introduction to the Mathematics of Change**](https://complexity-methods.github.io/book/introduction-to-the-mathematics-of-change.html) summarises most of the information in the video lecture. 
+```
+
+</br>
+
+In this assignment you will examine two (relatively) simple one-dimensional maps based on the models implemented in a spreadsheet. Just copy the linked Google Sheet to a new on-line Google Sheet, or, save it to your computer and use your favourite spreadsheet software (e.g., Excel, Numbers) to explore the behaviour of the model.    
+    
+We will start with the *Linear Map* and then proceed to the slightly more complicated *Logistic Map* (aka *Quadratic map*). You can also use `R` to model the dynamical processes, but for now we will assume you'll use the spreadsheets linked to in the assignments.
+
+</br>
+
+```{block2, type='rmdnote'}
+Check the solutions of the assignments **after** you tried to do them on your own!    
+```
+
+</br>
+
+## **The Linear Map**
+
+</br>
+
+Equation \@ref(eq:linmap) is the ordinary difference equation (ODE) discussed in [the course book](https://complexity-methods.github.io/book/introduction-to-the-mathematics-of-change.html) and is called the *Linear Map*:
+  
+\begin{equation}
+Y_{i+1} = r*Y_i
+(\#eq:linmap)
+\end{equation}
+  
+In these exercises you will *simulate* time series produced by the change process in equation \@ref(eq:linmap) for different parameter settings of the growth-rate parameter $r$ (the *control parameter*) and the initial conditions $Y_0$. *Simulation* is obviously different from a statistical analysis in which parameters are estimated from a data set. The goal of these assignments is to get a feeling for what a dynamical model is, and in what way it is different from a linear statistical regression model like GLM.
+
+</br>
+
+```{block2, type = "rmdnote"}
+It is common practice to use $Y_{i}$ for the current state and $Y_{i+1}$ for the next state of a discrete time model (a map, a difference equation). For a continuous time model (a flow, a differential equation), sometimes $Y_{t}$ and $\hat{Y_t}$ are used. More common is the $\delta$, or *'change in'* notation: $\frac{dY}{dt} = r * Y(t)$, which you can pronounce as *'a change in Y over a change in time is a function of ...'*. However, different authors have different preferences and may use other notations.
+```
+  
+</br>
+
+### Growth in a Spreadsheet
+  
+</br>
+
+```{block2, spreadset1, type='rmdimportant'}
+If you want to modify the spreadsheets and use them as a template for other assignments, be sure to check the following settings: 
+  
+* Open a Microsoft Excel worksheet or a [Google sheet](https://www.google.com/docs/about/)
+* Check whether the spreadsheet uses a 'decimal-comma' ($0,05$) or 'decimal-point' ($0.05$) notation. 
+    + The numbers given in the assignments of this course all use a 'decimal-point' notation.
+* Check if the `$` symbol fixes rows and columns when it used in a formula in your preferred spreadsheet program. 
+    + This is the default setting in Microsoft Excel and Google Sheets. If you use one of those programs you are all set.
+```
+
+</br>
+
+First study the behaviour of the **Linear map** in a spreadsheet and if you want to, try to implement it in `R`.
+  
+* Open the [GoogleSheet](https://docs.google.com/spreadsheets/d/1EEpUFxEmelJDPDT61jyT_xfntLo_MYBTW0MZuRSC770/edit?usp=sharing) and look at the **Linear map** tab.
+* The `r` in cell `A5` is the *control parameter*, it currently has the value $1.08$ in cell`B5`.
+* The cell labelled $Y_0$ in `A6` is the *initial value* at $i=0$. It has the value $0.1$ in cell `B6`.   
+* The `A` column also contains $Y_i$, the output of the linear map. 
+    + Click on cell `A10`, in the *formula bar* you can see that this cell simply refers to the initial value given in `B6`. So, this will be the first input value to the iterative process.
+    + Click on `A11`, this corresponds to time step $i=1$. In the formula bar you can see the very simple implementation of the linear map which calculates the value at $i=1$ from the initial value at $i=0$ and the value of $r$ in `B5`. The value of cell `A11` is the product of the value in cell `B5` (parameter `r`) and the value of cell `A10` ($Y_{i=0}$).
+    
+</br>
+
+```{block2, type="rmdkennen"}
+A reminder of what the model represents:     
+      
+* We are calculating $Y_{i+1}$ (i.e. 'behaviour' in the future, given the current state)
+* This value is *completely determined* by $Y_{t=0}$ (i.e., the first 'input') and the value of the control parameter `r` (the growth rate)
+* There are no stochastic components involved in generating the temporal evolution of `Y`
+```
+  
+</br>
+
+### Change the *control parameter* and label the *order parameter*  {.tabset .tabset-fade .tabset-pills}
+
+If you make a copy of the Google Sheet you should be able to edit the cells. If this does not work, [download the spreadsheet from GitHub](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/Iterating1Dmaps/Assignment%20DCS_%20Iterating%201D%20Maps.xlsx)
+  
+* Change the values in cells `B5` and `B6` and you will see an immediate change in the graph. To study model behaviour, try the following growth parameters:
+    + $r =  1.08$
+    + $r = -1.08$
+    + $r =  1$
+    + $r = -1$
+    + $r =  0.95$
+    + $r = -0.95$
+
+#### Questions {-}
+* Are there any *qualitative differences* in the dynamical behaviour of the system that can be attributed parameter values?
+* Provide a description for each clearly distinct behaviour displayed by this system (only for the parameter settings you examined). 
+
+#### Answers {-}
+* Yes!
+    + $r =  1.08$ - Unlimited exponential growth, $Y$ will grow infinitely large
+    + $r = -1.08$ - Unstable limit cycle, exponential 2-period oscillation $Y$ will grow infinitely large
+    + $r =  1$ - Point attractor, fixed point at $Y = 1$
+    + $r = -1$ - Limit cycle, closed period-2 orbit at $Y = [-1,1]$
+    + $r =  0.95$ - Exponential decay, $Y$ will approach $0$ in the limit
+    + $r = -0.95$ - Point attractor, exponentially decaying 2-period oscillation, $Y$ will approach $0$
+
+
+```{block2, type="rmdkennen"}
+The labels assigned to behavioural modes that are clearly qualitatively distinct from one another, are know as the **order parameter**. The **order parameter** will change its value to indicate the system has transitioned to a new behavioural regime. Such changes often occur suddenly with gradual changes in the **control parameter**.     
+For example, the (most familiar) phases that describe matter are an **order parameter** (solid, liquid, gas and plasma). We know water will transition from a liquid state to a gas state if we increase the **control parameter** beyond a certain point (e.g. temperature rises above $100^\circ\text{C}$).
+
+Other names you might encounter that refer to the change of the label of an order parameter:
+  
+* Phase transition/shift
+* Order transition
+* Critical transition
+* Change of behavioural mode/regime
+* Change of attractor state/landscape
+* Shift between self-organised/stable states/attractors
+```
+
+</br>
+
+### Dependence on initial conditions? {.tabset .tabset-fade .tabset-pills}
+  
+* Change the initial value $Y_0$ in cell `B6` to $10$ and compare to $0.1$ (if you want to directly compare different settings, just create a new copy of the sheet)
+* Subsequently give the growth parameter in cell `B5` the following values:
+    + $r =  1.08$
+    + $r = -1.08$
+    + $r =  1$
+    + $r = -1$
+    + $r =  0.95$
+    + $r = -0.95$ 
+  
+#### Questions {-}
+* Are there any *qualitative differences* in the dynamical behaviour of the system for each parameter setting, that can be attributed to a difference in initial conditions?
+  
+#### Answers {-}
+* No, there are no differences in the overall dynamics due to changes in initial conditions. Of course, the absolute values change, but the temporal pattern of change is the same. 
+</br>
+</br>
+
+## **The Logistic Map** 
+  
+The Logistic Map takes the following functional form: 
+  
+\begin{equation}
+Y_{i+1} = r*Y_i*(1-Y_i)
+(\#eq:logmap)
+\end{equation}
+  
+### Chaos in a spreadsheet 
+  
+* Open the [GoogleSheet](https://docs.google.com/spreadsheets/d/1EEpUFxEmelJDPDT61jyT_xfntLo_MYBTW0MZuRSC770/edit?usp=sharing) and look at the **Logistic map** tab.
+* The set-up is the same as for the linear map, except of course the implemented change process.
+* The `A` column contains $Y_i$, the output of the Logistic map. With $r=1.3$ the behaviour looks a lot like an S-curve, a logistic function.
+* Check the following:
+    + Click on `A10`, in the formula bar you can see this refers to the initial value `B6`.
+    + Click on `A11`, in the formula bar you can see the very simple implementation of the Logistic map.
+    + The value of cell `A11` ($Y_{i=1}$) is calculated by multiplying the value of cell `B5` (parameter `r`) with the value of cell `A10` (the current value $Y_i$, in this case $Y_{i=0}$). The only difference is we are also multiplying by $(1-Y_i)$.
+
+</br>
+
+```{block2, QLinMap, type='rmdselfThink'}
+We established that `r` controls growth, what could be the function of $(1-Y_t)$?
+```
+
+</br>
+
+### Change the control parameter, label the order parameter {.tabset .tabset-fade .tabset-pills}
+  
+To study the behaviour of the Logistic Map you can start changing the values in `B5`. 
+  
+* Try the following settings for $r$:
+    + $r = 0.9$
+    + $r = 1.9$
+    + $r = 2.9$
+    + $r = 3.3$
+    + $r = 3.52$
+    + $r = 3.9$
+
+#### Questions {-}
+  
+* Are there any *qualitative differences* in the dynamical behaviour of the system that can be attributed parameter values?
+* Provide a description for each clearly distinct behaviour (the labels of the order parameter) displayed by this system (only for the parameter settings you examined). 
+  
+#### Answers {-}
+
+* Yes!
+* With $Y_0 = 0.01$:
+    + $r = 0.9$ - Point attractor, fixed point at $Y = 0$
+    + $r = 1.9$ - Point attractor, fixed point at $Y = 0.4737$
+    + $r = 2.9$ - Point attractor, fixed point at $Y = 0.6552$
+    + $r = 3.3$ - Limit cycle attractor, closed period 2 orbit at $Y =  [0.8236, 0.4794]$
+    + $r = 3.52$ - Limit cycle attractor, closed period 4 orbit at $Y =  [0.5121, 0.8795, 0.3731, 0.8233]$
+    + $r = 3.9$ - Strange attractor, a-periodic orbit all values between $\approx0.01$ and $\approx0.99$
+
+
+  
+### The return plot {.tabset .tabset-fade .tabset-pills}
+  
+#### Questions {-}
+
+* Set $r$ at $4.0$:
+    + How would you describe the dynamics of the time series? Periodic? Something else?
+    + Check the values, is there any value that is recurring, for example like when $r=3.3$? Perhaps if you increase the length of the simulation?
+* Select the values in both columns under $Y(i)$ and $Y(i+1)$, (`A10` to `B309`) and create a scatter-plot (no lines, just points).
+    + The points should line up to represent a familiar shape...
+
+</br>
+
+```{block2, QuadReturnPlot1, type='rmdkennen'}
+The plot you just produced is a so called **return plot**, in which you have plotted $Y_{i+1}$ against $Y_i$. We shifted the time series by 1 time step, which is why this is also called a **lag 1 plot**.    
+
+Can you explain the pattern you see (a 'parabola') by looking closely at the functional form of the Logistic Map? (hint: another name for this equation is the **Quadratic Map**).
+
+If you change the control parameter to a lower value the return plot will seem to display a shape that is no longer a parabola, but this is not the case, all values produced by by the Logistic Map **must** be a point on a parabola. Some parameter settings just do not produce enought different points for the parabola to show itself in the return plot.
+```
+
+
+</br>
+
+
+```{block2, QuadReturnPlot2, type='rmdselfThink'}
+The return plot is an important tool for getting a 'first impression' of the nature of the dynamic process that generated the observed values:
+  
+* What do you expect the return plot of the **Linear Map** will look like? 
+* Try to imagine what the lag 1 plot of a cubic difference equation would look like
+* What about the return plot for a timeseries of independent random numbers (white noise)?     
+* We are of course not limited to a lag of 1, what happens at lag 2, or lag 10 in the return plots of the Linear and Quadratic Map?
+```
+
+#### Answers {-}
+
+* Set $r$ at $4.0$:
+    + The dynamics are called a-periodic, or quasi-periodic, or, chaotic.
+    + None of the values will exactly recur!!
+* Select the values in both columns under $Y(i)$ and $Y(i+1)$, (`A10` to `B309`) and create a scatter-plot (no lines, just points).
+    + The points form a parabola
+    + The return plot for both maps can be seen [here](https://docs.google.com/spreadsheets/d/17PBTvGa1Hu9spqEQGuhpwWXGeY7Nujkm09pxcppKPn4/edit?usp=sharing) 
+    
+* Why a parabola? Think about what the iterative process represents: It is the rule that changes the value of Y at one point in time, into a value at the next point in time. The only relationship that can exist between two points is the difference equation... work out the brackets, what kind of equation is this?
+
+* For the linear map, the same thing holds, what kind of equation is the linear map? Now you can probably also deduce what the return maps of a cubic and quartic equation look like... describe their shape, or draw!
+
+
+</br>
+
+### Sensitive dependence on initial conditions?  {.tabset .tabset-fade .tabset-pills}
+  
+Go to the following [GoogleSheet](https://docs.google.com/spreadsheets/d/1xaZJLYfZzkxg_PXCAa7QT7p4R_JTnUIxzs_Qs1-RAOQ/edit?usp=sharing) and download or copy it.
+  
+#### Questions {-}
+  
+* Imagine these are observed time series from two subjects in a response time experiment. These subjects are perfect 'twins':
+    + The formula describing their behaviour is exactly the same (it's the Quadratic Map, check it!)
+    + The control parameter, controlling the behavioural mode is exactly the same ($r=4$).
+    + The only difference is that they have a tiny discrepancy in initial conditions in cell `D6` of $0.01$.
+* Not tiny enough? Change it to become even smaller:
+    + $0.001$
+    + $0.0001$
+    + $0.00001$
+    + etc.
+* What happens as you make the discrepancy smaller and smaller?
+
+</br>
+
+
+#### Answers {-}
+
+By making the discrepancy smaller the two time series will become more similar.
+
+```{block2, type="rmdkennen"}
+This sheet displays the extreme sensitivity to changes in initial conditions displayed by the Logistic Map for specific parameter settings. This specific phenomenon is more commonly referred to as **The Butterfly Effect**. It is a characteristic of a very interesting and rather mysterious behaviour displayed by deterministic dynamical equations known as **deterministic chaos**.
+
+However, perhaps even more important to notice here, is the fact that a wide range of qualitatively different behaviourial modes can be understood as originating from one and the same, rather simple, dynamical system. The different behavioural modes were observed for different values of a control parameter, which, in real-world models, often represents an observable (physical) quantity (e.g. temperature, available resources, chemical gradient, etc.) 
+
+The Logistic Map is the simplest nontrivial model that can display deterministic chaos.
+```
+
+</br>
+
+
+## **EXTRA:** Using `R` to simulate the Linear Map {.tabset .tabset-fade .tabset-pills}
+  
+
+```{block2, type="rmdnote"}
+These assignments are optional.
+You  can look at the answers if you want to know how to create these models in R.
+```  
+
+
+
+The best (and easiest) way to simulate these simple models in `R` is to create a function, which takes as input arguments the parameters ($Y_0$, $r$) and a variable indicating the length of the time series.
+
+#### Questions {-}
+
+For the Linear Map you could use this template ([also see the notes in the course book](https://complexity-methods.github.io/book/implementing-iterative-functions.html)):
+
+```{r, eval=FALSE, include=TRUE, tidy=FALSE}
+# TEMPLATE
+# Modify this function
+linearMap <- function(Y0 = 0, r = 1, N = 100){
+                    # Y0, r and N are arguments to this function, they have been given default values
+                    # When you call the function you can pass different values to these arguments
+    
+    # Initialize Y as vector of Y0, followed by N-1 empty slots (NA).
+    # You could also useY <- numeric(N+1) and assign the value of Y0 to Y[1]. This would change the for loop.
+    Y <- c(Y0, rep(NA,N-1))
+    
+    # Then, you need create the iteration using a for(... in ...){...} loop
+    for(i in 1:(N-1)){
+        
+    Y[i+1] <-       # !!You implement the code for the linear or Logistic map here!!
+        
+    }
+    
+    return(Y)
+}
+```
+
+</br>
+
+* Copy the code to `R` and implement the Linear Map by looking at the formula, or the spreadsheet.
+* To test it, you need to initialize the function by selecting the function code and running it. 
+    + The environment will now contain a function called `linearMap`
+* Generate some data by calling the function using $Y0=0.1$, $r=1.08$ and $N=100$ and store the result in a variable. 
+
+#### Answers {-}
+
+```{r, eval=TRUE, include=TRUE, tidy=FALSE}
+# Linear Map
+linearMap <- function(Y0 = 0, r = 1, N = 100){
+  
+  # Initialize Y as vector of Y0, followed by N-1 empty slots (NA).
+  Y <- c(Y0, rep(NA,N-1))
+  
+  # Then, you need create the iteration
+  for(i in 1:(N-1)){
+    
+    Y[i+1] <- r * Y[i] # The linear difference equation
+    
+    }
+  
+  return(Y)
+}
+```
+
+
+### Plot the time series {.tabset .tabset-fade .tabset-pills}
+
+#### Questions {-}
+
+Creating a time series plot is easy if the function `linearMap` returns the time series as a numeric vector. You could just use:
+
+```{r, eval=FALSE,tidy=FALSE}
+plot(linearMap(Y0=0.1,r=1.08,N=100), type = "l")
+```
+
+But perhaps better to first save the output of the function and then plot it.
+
+```{block2, useR, type='rmdnote'}
+Have a look at the examples on different ways to plot time series in `R` in [the Appendix of the course book: **Working with time series in R**](https://complexity-methods.github.io/book/plotTS.html) 
+```
+
+
+#### Answers {-}
+
+First save the output of the function and then plot it.
+
+```{r, eval=TRUE,tidy=FALSE}
+Y <- linearMap(Y0=0.1,r=1.08,N=100)
+plot(Y, type = "p", pch=16, cex=.6)
+```
+
+`R` has specialized objects to represent time series, and functions and packages for time series analysis. These are especially convenient for plotting time and date information on the X-axis. See the examples on plotting [time series in `R` in the Appendix of the course book](https://complexity-methods.github.io/book/plotTS.html).
+  
+</br>
+</br>
+
+### Use `R` to simulate the Logistic Map {.tabset .tabset-fade .tabset-pills}
+
+The best (and easiest) way to simulate the discrete time models is to create a function which takes as input the parameters ($Y_0$, $r$) and a variable indicating the length of the time series.
+
+#### Questions {-}
+
+To model the Logistic Map, use this template:
+
+```{r, eval=FALSE, include=TRUE, tidy=FALSE}
+# TEMPLATE
+# Modify this function
+logisticMap <- function(Y0 = 0.01, r = 1, N = 100){
+    
+    # Initialize Y as vector of Y0, followed by N-1 empty slots (NA).
+    Y <- c(Y0, rep(NA,N-1))
+    
+    # Then, you need create the iteratation
+    for(i in 1:(N-1)){
+        
+    Y[i+1] <-      # !!Implement the linear or logistic map here!!
+        
+    }
+    
+    return(Y)
+}
+```
+
+</br>
+
+* Copy the code above and implement the Logistic Map.
+* When you are done, you need to initialize the function, select the code and run it. 
+    + The environment will now contain a function called `logisticMap`
+    + Generate some data by calling the function using $Y0=0.1$, $r=4$ and $N=100$ (or any other values you want to explore) and store the result in a variable. 
+    
+
+#### Answers {-}
+
+```{r, include=TRUE, tidy=FALSE}
+# Logistic Map
+logisticMap <- function(Y0 = 0.01, r = 1, N = 100){
+    
+    # Initialize Y as vector of Y0, followed by N-1 empty slots (NA).
+    Y <- c(Y0, rep(NA,N-1))
+    
+    # Then, you need create the iteratation
+    for(i in 1:(N-1)){
+        
+    Y[i+1] <- r * Y[i] * (1 - Y[i]) # The quadratic difference equation
+       
+    }
+    
+    return(Y)
+}
+```
+
+
+### Plot the time series {.tabset .tabset-fade .tabset-pills}
+
+#### Questions {-}
+
+Creating a time series plot is easy if the function `linearMap` returns the time series as a numeric vector. You could just use:
+
+```{r, eval=FALSE,tidy=FALSE}
+plot(logisticMap(Y0=0.01,r=1.9,N=100), type = "l")
+```
+
+* Also try to create a graph that demonstrates the sensitive dependence on initial conditions
+* Create the lag 1 return plot.
+      + Also try to create a lag 2, lag 3 and lag 4 return plot.
+      + Can you explain the patterns?
+
+
+#### Answers {-}
+
+```{r, tidy=FALSE}
+library(plyr)
+rs <- c(0.9,1.9,2.9,3.3,3.52,3.9)
+op<-par(mfrow=c(2,3))
+l_ply(rs,function(r) plot(logisticMap(r=r),ylab = paste("r =",r) ,type = "l"))
+par(op)
+```
+
+* Also try to create a graph that demonstrates the sensitive dependence on initial conditions
+* Create the lag 1 return plot.
+      + Also try to create a lag 2, lag 3 and lag 4 return plot (increase N to 500 or 1000).
+      + Can you explain the patterns?
+
+```{r, tidy=FALSE}
+lags <- c(1,2,3,4)
+N <- 1000
+op <- par(mfrow = c(2,2), pty = "s")
+l_ply(lags, function(l) {plot(dplyr::lag(logisticMap(r=4,N=N),l), logisticMap(r=4,N=N), pch = ".", xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = "Y(t+1)",  main = paste("lag =",l))})
+par(op)
+```
+
+
+### Using casnet {-}
+
+`casnet` has some built in functions called 'toy models' you can use to generate the models in these assignments:
+* [`growth_ac()`](https://fredhasselman.github.io/casnet/reference/growth_ac.html)
+* [`growth_ac_cond()`](https://fredhasselman.github.io/casnet/reference/growth_ac_cond.html)
+
+</br>
+
+## **Multivariate Models and Numerical Integration**
+
+```{block2, type='rmdimportant'}
+* Watch [**Assignment Lecture 02**](https://youtu.be/FuG07jiPWjw) video before you make these assignments.
+* [Chapter 3: **Introduction to the Mathematics of Change**](https://complexity-methods.github.io/book/introduction-to-the-mathematics-of-change.html) summarises most of the information in the video lecture. 
+```
+
+</br>
+
+By multivariate systems we do not simply mean there is more than 1 iterative process (dynamical variable), but that there is a coupling between at least two iterative processes that makes the outcomes of each individual process at each time step (partially) dependent on the previous time step of other processes.
+
+
+### **One directional coupling**
+
+In this assignment we'll look at change due to implementing a 'conditional' rule. By creating **supportive interactions** between separate processes whose parameters change according to some `IF ... THEN` rule, it is possible to model growth processes that appear to evolve in different stages, levels, or have sudden jumps.
+
+These models probably represent the most simple version of *interaction dynamics*, *coupling dynamics*, or *multiplicative interactions* between change processes.  Basically, the processes will still be rather independent from one another , that is, the values of each process do not directly depend on one another. Here, interaction simply means a 'shock' is delivered to an individual process, by changing the parameters of the model after which the system just continues to evolve on its own. 
+
+```{block2, type="rmdnote"}
+[Paul Van Geert](https://www.paulvangeert.nl) is one of the pioneers of dynamic systems modelling of individual developmental processes, he started out by modelling language growth using the logistic map and flow:
+
+* van Geert, P. (1991). A dynamic systems model of cognitive and language growth. [_Psychological Review_, 98, 3-53.](https://www.paulvangeert.nl/publications_files/psychological%20review%201991.htm)
+
+One of his most recent papers takes the form of an imaginary interview with himself, very entertaining and very informative:
+
+* van Geert P. (2020). Dynamic Systems, Process and Development. [_Human development, 63(3-4)_, 153–179. https://doi.org/10.1159/000503825](https://www.karger.com/Article/Pdf/503825)
+```
+
+
+### Connected growers {.tabset .tabset-fade .tabset-pills}    
+      
+Have a look at [this spreadsheet](https://docs.google.com/spreadsheets/d/1cbC58yTg-pOoThMQY0UyzIQ3ZiaTosJlqQFkRHt9LJg/edit?usp=sharing) in which a model is implemented that is discussed in the following chapter by Paul van Geert:
+      
+[Van Geert, P. (2003). Dynamic systems approaches and modeling of developmental processes. In J. Valsiner and K. J. Conolly (Eds.), Handbook of developmental Psychology. London: Sage. Pp. 640-672](http://www.paulvangeert.nl/publications_files/Handbook%20Valsiner%20and%20Conolly.pdf).
+      
+The relevant section pertaining to this assignment is on page 665:
+
+* BUILDING YOUR OWN MODELS: A SHORT TUTORIAL
+    + The model itself is discussed in "A Model of Hierarchically Connected Growers"
+
+
+#### Questions {-}
+
+```{block2, type="rmdnote"}
+The spreadsheetmodel tries to mimic processes described in Figures 28.6 to 28.8 in van Geert (2003), but only column `A` receives a 'support' boost As noted in the text:
+  
+"A similar set of equations can be set up, applying to columns B and C respectively."
+
+```
+
+
+Try to understand what is going on in this model:
+
+* Describe what happens if you change **Level A to turn on C** from `0.8` to `0.1` and `1`
+     + What is the function of this value? Look in the formula bar of process C.
+* Which process is supporting which process? Hints:
+     + What happens if you change `B2` from `0.5` to `2` and `.01`? 
+     + Examine the fomula's of process A and B. What do the values of B2 and C2 do? 
+
+
+
+#### Answers {-}
+
+
+* Changing **Level A to turn on C** changes when process B starts growing.
+    + This value decides at which level of A the value of process C will turn from `0` to `1`.
+* B supports growth of A by a factor of B2 of its own value. C supports growth of B by a factor of its own value (which can be controlled by C2).
+
+
+## **The predator-prey model**
+
+In this assignment we will look at a 2D coupled dynamical system: **the Predator-Prey model** (aka [Lotka-Volterra equations](https://en.wikipedia.org/wiki/Lotka-Volterra_equations)).      
+
+The dynamical system is given by the following set of first-order differential equations, one represents changes in a population of predators, (e.g., **F**oxes: $f_F(R_t,F_t)$ ), the other represents changes in a population of prey, (e.g., **R**abbits: $f_R(R_t,F_t)$ ).
+
+
+\begin{align}
+\frac{dR}{dt}&=(a-b*F)*R \\
+\\
+\frac{dF}{dt}&=(c*R-d)*F
+(\#eq:lv)
+\end{align}
+
+
+This is not a *difference* equation but a *differential* equation, which means building this system is not as straightforward as was the case in the previous assignments. Simulation requires a numerical method to 'solve' this differential equation for time, which means we need a method to approach, or estimate continuous time in discrete time. Below you will receive a speed course in one of the simplest numerical procedures for integrating differential equations, the [Euler method](https://en.wikipedia.org/wiki/Euler_method). Also see the notes [in the course book](https://complexity-methods.github.io/book/numerical-integration-to-simulate-continuous-time.html).
+
+
+### The Euler method {-}
+
+A general differential equation is given by:
+
+\begin{equation}
+\frac{dx}{dt} = f(x)
+(\#eq:diff)
+\end{equation}
+
+Read it as saying: "_a change in $x$ over a change in time is a function of $x$ itself_". This can be approximated by considering the change to be over some constant, small time step $\Delta$.
+
+\begin{equation}
+\frac{(x_{t+1} = x_t)}{\Delta} = f(x_t)
+(\#eq:Euler)
+\end{equation}
+
+After rearranging the terms a more familiar form reveals itself:
+
+\begin{align}
+x_{t+1} &= x_t = f(x_t) * \Delta \\
+x_{t+1} &= f(x_t) * \Delta + x_t
+(\#eq:Euler2)
+\end{align}
+
+This looks like an ordinary iterative process, $\Delta$ the *time constant* determines the size of time step taken at every successive iteration. It is like saying that the discrete steps we are taking to predict the next value using a difference equation are way too large to mimic the flow of continuous time, so we need to reduce the outcome first. Take smaller steps. 
+
+For a 2D system with variables **R** and **F** one would write:
+    
+\begin{align}
+R_{t+1} &= f_R(R_t,Ft) * \Delta + R_t \\
+F_{t+1} &= f_F(R_t,F_t) * \Delta + F_t
+(\#eq:EulerRF)
+\end{align}
+    
+</br>
+</br>
+
+
+### Foxes and Rabbits in a Spreadsheet {.tabset .tabset-fade .tabset-pills}
+
+The Predator-Prey model is implemented using the Euler method [in this spreadsheet](https://docs.google.com/spreadsheets/d/1rZDEo8XYNCzhRWrWOli7DDB6f4m87p-hjYv2_KlBLa4/edit?usp=sharing)
+
+The plot of Rabbits versus Foxes represents a space spanned by the dimensions of the system, being the number of Rabbits and Foxes at a specific point in time. Time is only implicitly present in the plot. Each coordinate of (Foxes,Rabbits) represents a potential state of the system. So this is the **state space** (aka *phase plane*) of the system. As can be seen, the system does not occupy all states. The degrees of freedom of the system are constrained, we just see a limited set of coordinates.
+
+
+#### Questions {-}    
+       
+* Examine what happens for different values of Delta in `B1`, try:
+    + .001
+    + .01
+* Through mathematical analysis we know that the current parameter settings should produce a limit cycle with a stable orbit in the state space. Is this a model of a  stable limit cycle?
+
+
+#### Answers {-}
+
+* Smaller values of Delta produce shorter "dynamics", the smallest value does not even complete 1 cycle in the N=6000 data points. Larger values produce more cycles, but they "drift" further away with each cycle.
+* No.
+
+
+
+### Other demonstrations of dynamic modelling using spreadsheets {-}
+
+See the website by [Paul Van Geert](http://www.paulvangeert.nl/research.htm), scroll down to see models of:
+
+* Learning and Teaching
+* Behaviour Modification
+* Connected Growers
+* Interaction during Play
+
+
+</br>
+</br>
+
+
+
+## **Growth functions in continuous time**
+
+The result of applying a method of **numerical integration** such a s Euler's method is called a **numerical solution** of the differential equation. The **analytical solution** is the equation which will give you a value of $Y$ for any point in time, given an initial value $Y_0$. Systems which have an analytical solution can be used to test the accuracy of **numerical solutions**.
+
+The logistic differential equation $\frac{dY}{dt} = r*Y_t*\left(1-\frac{Y_t}{K}\right)$ has an analytic solution given as:
+
+$$
+\frac{K * Y_0}{Y_0 + \left(K-Y_0\right) * e^{-r*t} }
+$$
+We have the implemented discrete time growth function in `growth_ac()`, but could easily adapt all those functions to make them continuous by using Euler's method. 
+
+Below is a comparison of the analytic solution of the continuous logistic growth function, with the result of using Euler's method to approximate the continuous time function.
+
+```{r}
+library(plyr)
+library(RColorBrewer)
+# Parameter settings
+delta <- .1
+N <- 100
+
+# W'ell make time vector to get a smoot analytis solution
+TIME <- seq(1,N,by=1)
+
+r <- 3.52 # Remember this setting? This means Chaos in discrete time, in continous time it means extreme growth.
+
+# Carrying capacity and initial condition are chosen se we get a nice plot
+K  <-  8
+Y0 <- .01
+
+deltas <- c(delta, delta*.5,delta*.25,delta*.2,delta*.15,delta*.1,delta*.05)
+cl <- brewer.pal(length(deltas),"Set2")
+
+# Numerical integration of the logistic differential equation as implemented in growth_ac()
+Y.euler <- llply(deltas, function(d){
+  # Use the values in deltas to get iterate the logistic flow
+  Y <- as.numeric(c(Y0, rep(NA,length(TIME)-1)))
+  ts(sapply(seq_along(TIME), function(t) Y[[t+1]] <<- ((r * Y[t] * (K - Y[t])) * d) + Y[t] ))
+  })
+
+# Analytical solution
+# We have to scale TIME a bit, normally we would use 1/TIME
+Y.analytic <- ts( K * Y0 / (Y0 + (K - Y0) * exp(-1*(r*TIME/30))) )
+
+ts.plot(Y.euler[[1]], Y.euler[[2]] ,Y.euler[[3]], Y.euler[[4]], Y.euler[[5]], Y.euler[[6]], Y.euler[[7]], Y.analytic,
+        gpars = list(xlab = "time (a.u.)",
+                     ylab = expression(Y(t)),
+                     main = expression(paste("Analytic vs. Numerical solution to ",frac(dY,dt)==Y[t]*r*(K-Y[t]))),
+                     lwd = c(rep(1,length(deltas)),3),
+                     lty = 1,
+                     col = c(cl,"red3"),
+                     ylim = c(0,10),
+                     cex.main = .8
+                     )
+        )
+
+legend(70, 5, c(paste("Euler: delta =",deltas),"Analytic solution (t/30)"),
+       lwd = c(rep(1,length(deltas)),2),
+       lty = 1,
+       col = c(cl,"red3"),
+       merge = TRUE, cex = .8)
+```
+
+```{block2, type="rmdnote"}
+If you want to learn how to put mathematical operators in legends and axes using `expression()`, see the webpage [Mathematical Annotation in R](http://vis.supstat.com/2013/04/mathematical-annotation-in-r/)
+```
+
+When `delta` is relatively large, the fluctuations still resemble deterministic chaos, as delta gets closer to 0, this 'smooths out' the fluctuations and the analytic solution is approached. As a consequence, it takes longer and longer to reach `K`. However, 'longer' is of course relative to the unit of time represented on the x-axis, because we're simulating, they are arbitrary units.
+
+
+## **EXTRA: Modelling in R**
+
+### **One directional coupling**
+
+A more realistic way to model a change of growth parameter `r` using `IF ... THEN` statements, is to make the growth of a variable depend on another process. The proper *dynamical* way to do this would be to define a coupled system of difference or differential equations in which the interaction dynamics completely regulate growth (or decay) of the variables directly, such as the predator-prey system in the next assignment. 
+
+### **Connected growers** {.tabset .tabset-fade .tabset-pills}
+
+For this assignment, we'll use R to achieve the levels created in the previous assignment.
+
+Have a look at [this spreadsheet](https://docs.google.com/spreadsheets/d/1cbC58yTg-pOoThMQY0UyzIQ3ZiaTosJlqQFkRHt9LJg/edit?usp=sharing) in which a model is implemented that is discussed in the following chapter by Paul van Geert:
+
+[Van Geert, P. (2003). Dynamic systems approaches and modeling of developmental processes. In J. Valsiner and K. J. Conolly (Eds.), Handbook of developmental Psychology. London: Sage. Pp. 640-672](http://www.paulvangeert.nl/publications_files/Handbook%20Valsiner%20and%20Conolly.pdf).
+
+Relevant text pertaining to this assignment:
+
+* BUILDING YOUR OWN MODELS: A SHORT TUTORIAL (p. 665)
+    + The model is discussed in "A Model of Hierarchically Connected Growers"
+
+#### Questions {-}
+
+Try to model this example of supportive interaction in `R`. 
+
+```{block2, type="rmdnote"}
+The spreadsheetmodel tries to mimic Figures 28.6 to 28.8 in van Geert (2003), but only column `A` receives a 'support' boost As noted in the text:
+  
+"A similar set of equations can be set up, applying to columns B and C respectively."
+
+```
+
+* You can use the template function below
+* You can look in the spreadsheet, or look in the chapter to find the right formula's for `A` and `B`
+* Make a plot like in the spreadsheet
+    + Note that the function returns a data frame with A, B and C
+
+```{r, eval=FALSE}
+vanGeert.support <- function(A0 = 0.01, Ar = .5, AK = 1, 
+                             B0 = 0.01, Br = .2, BK = 1, 
+                             C0 = 0, C1 = 1, Cr = 1, CK = 1, 
+                             AtoC = 0.8, BsupportA = .5, N = 100){
+  
+  # Create a vector A,B,C of length N, which has value A0,B0,C0 at A[1],B[1],C[1]
+  A <- c(A0, rep(NA, N-1))
+  B <- c(B0, rep(NA, N-1))
+  C <- c(C0, rep(NA, N-1))
+  
+  # Then, you need create the iteration
+  for(i in 1:(N-1)){
+    
+    # You need to monitor the value of L and change the growth rate according to a rule
+    if(A[i]<AtoC){
+      C[i+1] <- # Value of C0
+    } else {
+      C[i+1] <- # Value of C1
+    }
+    
+    A[i+1] <- # Implement A with support from B
+    B[i+1] <- # Implement B whose growth depends on C
+  }
+  
+  return(data.frame(A=A,B=B,C=C))
+}
+
+```
+
+
+
+#### Answers {-}
+
+* The template filled in with the correct functions and parameter settings
+
+```{r, eval=TRUE}
+vanGeert.support <- function(A0 = 0.01, Ar = .5, AK = 1, 
+                             B0 = 0.01, Br = .2, BK = 1, 
+                             C0 = 0, C1 = 1, Cr = 1, CK = 1, 
+                             AtoC = 0.8, BsupportA = .5, N = 100){
+  
+  # Create a vector A,B,C of length N, which has value A0,B0,C0 at A[1],B[1],C[1]
+  A <- c(A0, rep(NA, N-1))
+  B <- c(B0, rep(NA, N-1))
+  C <- c(C0, rep(NA, N-1))
+  
+  # Then, you need create the iteration
+  for(i in 1:(N-1)){
+    
+    # You need to monitor the value of L and change the growth rate according to a rule
+    if(A[i]<AtoC){
+      C[[i+1]] <- C0
+    } else {
+      C[[i+1]] <- C1
+    }
+    
+    A[i+1] <- A[i] + A[i] * Ar * (1 - A[i] / AK) + A[i] * B[i] * BsupportA # A10 + A10 * $A$5 * (1 - A10 / $A$4) + A10 * B10 * $B$2
+    B[i+1] <- B[i] + B[i] * Br * (1 - B[i] / BK) * C[i]                    # B10 + B10 * $B$5 * (1 - B10 / $B$4) * C10
+    
+  }
+  
+  return(data.frame(A=A,B=B,C=C))
+}
+```
+
+* Make a plot like in the spreadsheet
+    + Note that the function returns a data frame with A, B and C
+
+```{r}
+Y <- vanGeert.support()
+
+ts.plot(ts(Y$A), ts(Y$B), ts(Y$C),
+        gpars = list(xlab = "time (a.u.)",
+                     ylab = expression(Y(t)),
+                     main = expression(paste("Hierarchical Connected Growers ")),
+                     lwd = rep(2,3),
+                     lty = c(1:3),
+                     col = c("darkred","darkblue","darkgreen")
+                     )
+        )
+legend(50, .8, c("B will support A by adding .5*B",
+                 paste0("B starts to grow at time ",which(Y$A > .8)[1]), 
+                 paste0("C turns to 1 at time ",which(Y$A > .8)[1])),
+       lwd = rep(2,3), lty = c(1:3), col = c("darkred","darkblue","darkgreen"), merge = TRUE)
+
+```
+
+
+* This would be the *not-so-dynamical* way to do it:
+
+```{r, eval=TRUE, include=TRUE}
+library(casnet)
+
+# Generate 3 timeseries
+Y1 <- casnet::growth_ac(k = 2, r =.2, type = "vanGeert")
+# Y2 and Y3 start at r = 0.001
+Y3 <- Y2 <- casnet::growth_ac(k = 2, r = 0.001, type = "vanGeert")
+
+# Y2 and Y3 start when k is approached
+c1 <- 1.6
+c2 <- 2.2
+
+# Here we just swap the new values with the old values
+Y2[Y1 > c1] <- casnet::growth_ac(r = .3, k = 3, type = "vanGeert", N = sum(Y1 > c1))
+Y3[Y2 > c2] <- casnet::growth_ac(r = .5, k = 4, type = "vanGeert", N = sum(Y2 > c2))
+
+# Make a nice plot
+ts.plot(Y1, Y2, Y3,
+        gpars = list(xlab = "time (a.u.)",
+                     ylab = expression(Y(t)),
+                     main = expression(paste("'Unconnected' Growers ",Y[t+1]==Y[t]*(1 + r - r*Y[t]))),
+                     lwd = rep(2,3),
+                     lty = c(1:3),
+                     col = c("darkred","darkblue","darkgreen")
+                     )
+        )
+legend(1, 3.8, c("Y1(0):  r = .2",
+                 paste0("Y2(",which(Y1 > c1)[1],"): r = .3"), 
+                 paste0("Y3(",which(Y2 > c2)[1],"): r = .5")),
+       lwd = rep(2,3), lty = c(1:3), col = c("darkred","darkblue","darkgreen"), merge = TRUE)
+```
+
+
+### **The predator-prey model in R** {.tabset .tabset-fade .tabset-pills}
+
+Use `R` to implement the Predator-Prey model discussed in the previous assignment (implemented [in this spreadsheet](https://docs.google.com/spreadsheets/d/1rZDEo8XYNCzhRWrWOli7DDB6f4m87p-hjYv2_KlBLa4/edit?usp=sharing)).
+
+
+#### Questions{-}
+
+* To get the right equations, you'll have to substitute $f_R(R_t,Ft)$ and $f_F(R_t,F_t)$ with the differential equations for Foxes and Rabbits provided above.
+* Use the following parameter settings:
+    + `N` = `1000`
+    + `a` and `d` are `1`
+    + `b` and `c` are `2` 
+    + Initial values `R0` and `F0` are `0.1`
+* Make a plot of the time series for Foxes and Rabbits
+* Make a plot of the 2D state space of this system (aka *phase plane*)
+    + Examine how the state space changes for different parameter settings
+
+#### Answers {-}
+
+
+The Euler set-up:
+$$
+\begin{align}
+R_{t+1} &= f_R(R_t,Ft) * \Delta + R_t \\
+F_{t+1} &= f_F(R_t,F_t) * \Delta + F_t
+\end{align}
+$$
+
+With the equations:
+$$
+\begin{align}
+R_{t+1} &=  (a-b*F_t)*R_t * \Delta + R_t \\
+\\
+F_{t+1} &=  (c*R_t-d)*F_t * \Delta + F_t
+\end{align}
+$$
+
+
+```{r}
+library(plyr)
+library(lattice)
+
+# Parameters
+N  <- 1000
+a  <- d <- 1
+b  <- c <- 2 
+R0 <- F0 <- 0.1
+R  <- as.numeric(c(R0, rep(NA,N-1)))
+F  <- as.numeric(c(F0, rep(NA,N-1)))
+
+# Time constant
+delta <- 0.01
+
+# Numerical integration of the lpredator-prey system
+l_ply(seq_along(R), function(t){
+    R[[t+1]] <<- (a - b * F[t]) * R[t] * delta + R[t] 
+    F[[t+1]] <<- (c * R[t] - d) * F[t] * delta + F[t] 
+    })
+
+# Note different behaviour when ts() is applied
+lattice::xyplot(cbind(ts(R),ts(F)))
+lattice::xyplot(R ~ F, pch = 16)
+```
+
+
+
+## **Beyond Foxes and Rabbits**
+
+In the [course book](https://complexity-methods.github.io/book/advmodels.html) we listed some more advanced models that build on the basic models we discussed here.
+
+When we discuss the topic of Phase Space reconstructions we'll use an example of 4 coupled Lotka-Volterra equations.
+
+
+----
+
+
+</br>
+</br>
+

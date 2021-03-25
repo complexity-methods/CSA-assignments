@@ -1,5 +1,5 @@
 ---
-title: "Basic (Nonlinear) Time Series Analysis"
+title: "Basic (Non-linear) Time Series Analysis"
 author: "Fred Hasselman"
 date: "1/14/2019"
 output: 
@@ -38,7 +38,7 @@ editor_options:
 >
 > --- Von Föerster (2003)
 
-In this course we will not discuss the type of linear time series models known as Autoregressive Models (e.g. AR, ARMA, ARiMA, ARfiMA) summarised on [this Wikipedia page on timeseries](https://en.wikipedia.org/wiki/Time_series#Models). There are many extensions to these linear models, check the [`CRAN Task View` on `Time Series Analysis`](https://cran.r-project.org/web/views/TimeSeries.html) to learn more (e.g. about package `zoo` and `forecast`). We will in fact be discussing a lot of methods in a book the Wiki page refers to for *'Further references on nonlinear time series analysis'*: [**Nonlinear Time Series Analysis** by Kantz & Schreiber](https://www.cambridge.org/core/books/nonlinear-time-series-analysis/519783E4E8A2C3DCD4641E42765309C7). You do not need to buy the book, but it can be a helpful reference if you want to go beyond the formal level (= mathematics) used in this course. Some of the packages we use are based on the acompanying software to the book [**TiSEAN**](https://www.pks.mpg.de/~tisean/Tisean_3.0.1/index.html) which is written in `C` and `Fortran` and can be called from the command line (Windows / Linux).
+In this course we will not discuss the type of linear time series models known as Autoregressive Models (e.g. AR, ARMA, ARiMA, ARfiMA) summarised on [this Wikipedia page on timeseries](https://en.wikipedia.org/wiki/Time_series#Models). There are many extensions to these linear models, check the [`CRAN Task View` on `Time Series Analysis`](https://cran.r-project.org/web/views/TimeSeries.html) to learn more (e.g. about package `zoo` and `forecast`). We will in fact be discussing a lot of methods in a book the Wiki page refers to for *'Further references on non-linear time series analysis'*: [**Nonlinear Time Series Analysis** by Kantz & Schreiber](https://www.cambridge.org/core/books/nonlinear-time-series-analysis/519783E4E8A2C3DCD4641E42765309C7). You do not need to buy the book, but it can be a helpful reference if you want to go beyond the formal level (= mathematics) used in this course. Some of the packages we use are based on the accompanying software to the book [**TiSEAN**](https://www.pks.mpg.de/~tisean/Tisean_3.0.1/index.html) which is written in `C` and `Fortran` and can be called from the command line (Windows / Linux).
 
 
 
@@ -54,7 +54,7 @@ Two ways:
 A. By downloading:
 
   1. Follow the link, e.g. for [`series.xlsx`](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.xlsx).
-  2. On the Github page, find a button marked **Download** (or **Raw** for textfiles).
+  2. On the Github page, find a button marked **Download** (or **Raw** for text files).
   3. Download the file
   4. Load it into `R` using the code below       
 
@@ -65,9 +65,9 @@ series <- rio::import("series.xlsx")
 ```
      
       
-B. By importing from Github:
+B. By directly importing the file in R from Github:
 
-   1. Copy the `url` associated with the **Download**  button [on Github](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.csv) (right-clik).
+   1. Copy the `url` associated with the **Download**  button [on Github](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.csv) (right-click).
    2. The copied path should contain the word 'raw' somewhere in the url.
    3. Call `rio::import(url)`
         
@@ -80,16 +80,16 @@ series <- rio::import("https://github.com/complexity-methods/CSA-assignments/raw
 
 ### Level, Fluctuation, and Visualisation  {.tabset .tabset-fade .tabset-pills}
 
-`series.xlsx` contains three time series `TS_1`, `TS_2` and `TS_3` . 
+`series.xlsx` contains three time series as columns `TS_1`, `TS_2` and `TS_3` . 
 
 
 #### Questions {-}
 
 * As a first step look at the mean and the standard deviation  of the three series, rounded to 2 decimals (use `mean()`, `sd()`, `round()`).
     + Suppose these were time series from three different subjects in an experiment, what would you conclude based on the means and SD's? 
-* Let's visualize these data. See the [chapter on plotting time series](https://darwin.pwo.ru.nl/skunkworks/courseware/1819_CMBS/book/plotTS.html) for all the different options.
+* Let's visualize these data. See the [appendix on plotting time series](https://complexity-methods.github.io/book/plotTS.html) for all the different options.
     + Does the visual representation of these series correspond to what you expected based on the statistical properties of these series?
-    + We'll examine whether there are different levels in the data using function `ts_levels()`. Look at the examples in the manual entry of this function to see how to plot the level data.
+    + We'll examine whether there are different levels in the data using function `ts_levels()` in *casnet*. Look at the examples in the manual entry of this function to see how to plot the level data.
 
 
 #### Answers {-}
@@ -126,10 +126,10 @@ round(sd(series$TS_3),2)
 
 ----
 
-* Let's visualize these data. See the [chapter on plotting time series](https://darwin.pwo.ru.nl/skunkworks/courseware/1819_CMBS/book/plotTS.html) for all the different options to do this.
+* Let's visualize these data. See the [chapter on plotting time series](https://complexity-methods.github.io/book/plotTS.html) for all the different options to do this.
     + Does the visual representation of these series correspond to what you expected based on the statistical properties of these series?
     + We'll examine whether there are different levels in the data using function `ts_levels()`. Look at the examples in the manual entry of this function to see how to plot the level data.
-    + Time series 2 could also be considered to oscilate around a relatively stable level. Try to modify the arguments of `ts_levels()` so it will return this level.      
+    + Time series 2 could also be considered to oscillate around a relatively stable level. Try to modify the arguments of `ts_levels()` so it will return this level.      
       
       
 
@@ -248,9 +248,9 @@ plotRED_acf(y = series$TS_3,Lmax = 50, returnCorFun = FALSE)
 ![](ASSIGNMENTS_D2_basicTSA_files/figure-html/unnamed-chunk-6-9.png)<!-- -->
 
 
-## **Basic Nonlinear TSA** 
+## **Basic Non-linear TSA** 
 
-Many nonlinear analyses can be considered "descriptive" techniques, that is, the aim is not to fit the parameters of a model, but to describe, quantitatively, some aspects of how one value changes into another value over time.
+Many non-linear analyses can be considered "descriptive" techniques, that is, the aim is not to fit the parameters of a model, but to describe, quantitatively, some aspects of how one value changes into another value over time.
 
 
 ### Intuitive notion of Fractal Dimension {-}
@@ -290,7 +290,7 @@ plotTS_multi(tmp, ylabel = "Scaling exponent alpha")
 <!-- A. By downloading: -->
 
 <!--   1. Follow the link, e.g. for [`series.xlsx`](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.xlsx). -->
-<!--   2. On the Github page, find a button marked **Download** (or **Raw** for textfiles). -->
+<!--   2. On the Github page, find a button marked **Download** (or **Raw** for text files). -->
 <!--   3. Download the file -->
 <!--   4. Load it into `R` using the code below        -->
 
@@ -302,7 +302,7 @@ plotTS_multi(tmp, ylabel = "Scaling exponent alpha")
 
 <!-- B. By importing from Github: -->
 
-<!--    1. Copy the `url` associated with the **Download**  button [on Github](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.csv) (right-clik). -->
+<!--    1. Copy the `url` associated with the **Download**  button [on Github](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.csv) (right-click). -->
 <!--    2. The copied path should contain the word 'raw' somewhere in the url. -->
 <!--    3. Call `rio::import(url)` -->
 
@@ -318,11 +318,11 @@ plotTS_multi(tmp, ylabel = "Scaling exponent alpha")
 Relative Roughness is calculated using the following formula:    
 
 \begin{equation}
-RR = 2\left[1 + \frac{\gamma_1(x_i)}{Var(x_i)}\right]
+RR = 2\left[1 - \frac{\gamma_1(x_i)}{Var(x_i)}\right]
 (\#eq:RR)
 \end{equation}
 
-The numerator in the formula stands for the `lag 1` autocovariance of the time series $x_i$, this is the unstanderdised lag1 autocorrelation. Check the function `acf()` to figure out how to get it. The denominator stands for the (global) variance of $x_i$ which all statistics packages can calculate. Another way to describe the variance is: `lag 0` autocovariance.
+The numerator in the formula stands for the `lag 1` auto-covariance of the time series $x_i$, this is the unstandardised lag1 autocorrelation. Check the function `acf()` to figure out how to get it. The denominator stands for the (global) variance of $x_i$ which all statistics packages can calculate. Another way to describe the variance is: `lag 0` auto-covariance.
 
 
 #### Questions {-}
@@ -334,11 +334,10 @@ The numerator in the formula stands for the `lag 1` autocovariance of the time s
     + There is also a function in `casnet` that will do everything for you: `fd_RR()`
 
 
-Use Figure \@ref(fig:RRf3) to lookup which value of $RR$ corresponds to which type of dynamics:
-
+Use Figure \@ref(fig:RRf3) to lookup which value of `RR` corresponds to which type of dynamics.
 
 <div class="figure" style="text-align: center">
-<img src="images/RRfig3.png" alt="Coloured Noise versus Relative Roughness" width="793" />
+<img src="ASSIGNMENTS_D2_basicTSA_files/figure-html/RRf3-1.png" alt="Coloured Noise versus Relative Roughness"  />
 <p class="caption">(\#fig:RRf3)Coloured Noise versus Relative Roughness</p>
 </div>
 
@@ -354,7 +353,7 @@ Use Figure \@ref(fig:RRf3) to lookup which value of $RR$ corresponds to which ty
 
 ----
 
-To see how to calculate RR 'by hand' you coulsd look at the code of the function `fd_RR()`
+To see how to calculate RR 'by hand' you could look at the code of the function `fd_RR()`
 If you select the function name in R and press F2, you should be able to see the code, or you can just type `fd_RR` (without parentheses)
 
 
@@ -373,7 +372,7 @@ fd_RR
 ## 
 ##   return(RelR)
 ## }
-## <bytecode: 0x7ff6072f32a8>
+## <bytecode: 0x7fa0571b0ae8>
 ## <environment: namespace:casnet>
 ```
 
@@ -426,15 +425,24 @@ Use the `sample_entropy()` function in package `pracma`.
 
 #### Questions {-}
 
-* Calculate the Sample Entropy of the two sets of three time series you now have.
+* Calculate the Sample Entropy of the three time series you now have.
     + Use a segment length `edim` of 3 data points, and a tolerance range `r` equal to the `sd()` of the series (`1*sd(ts)`).
     + Can you change the absolute SampEn outcomes by 'playing' with the `edim` parameter? If so, how does the outcome change, and why?
     + Do changes in the `SampEn` value due to different parameter settings change the relative order of the entropy for the three time series?
 
 
+Use Figure \@ref(fig:sampEnt) to lookup which value of `SampEn` corresponds to which type of dynamics.
+
+<div class="figure" style="text-align: center">
+<img src="ASSIGNMENTS_D2_basicTSA_files/figure-html/sampEnt-1.png" alt="Coloured Noise versus Sample Entropy"  />
+<p class="caption">(\#fig:sampEnt)Coloured Noise versus Sample Entropy</p>
+</div>
+
+
+
 #### Answers {-}
 
-* Calculate the Sample Entropy of the two sets of three time series you now have.
+* Calculate the Sample Entropy of the three time series you now have.
     + Use a segment length `edim` of 3 data points, and a tolerance range `r` equal to the `sd()` of the series (`1*sd(ts)`).
     + Can you change the absolute SampEn outcomes by 'playing' with the `edim` parameter? If so, how does the outcome change, and why?
     + Do changes in the `SampEn` value due to different parameter settings change the relative order of the entropy for the three time series?
@@ -481,9 +489,9 @@ On Day 1 we looked at return plots of simulated time series, we discussed what k
 #### Questions {-}
 
 * Based on the:
-  + *correlation functions*, what kind of shape or pattern do you expect to see in a lag-1 return pllot of each series?
-  + *RR*, what kind of shape or pattern do you expect to see in a lag-1 return pllot of each series?
-  + *SampEn*, what kind of shape or pattern do you expect to see in a lag-1 return pllot of each series?
+  + *correlation functions*, what kind of shape or pattern do you expect to see in a lag-1 return plot of each series?
+  + *RR*, what kind of shape or pattern do you expect to see in a lag-1 return plot of each series?
+  + *SampEn*, what kind of shape or pattern do you expect to see in a lag-1 return plot of each series?
 * Create the return plots!
 
 
@@ -491,9 +499,9 @@ On Day 1 we looked at return plots of simulated time series, we discussed what k
 #### Answers{-}
 
 * Based on the:
-  + *correlation functions*, what kind of shape or pattern do you expect to see in a lag-1 return pllot of each series?
-  + *RR*, what kind of shape or pattern do you expect to see in a lag-1 return pllot of each series?
-  + *SampEn*, what kind of shape or pattern do you expect to see in a lag-1 return pllot of each series?
+  + *correlation functions*, what kind of shape or pattern do you expect to see in a lag-1 return plot of each series?
+  + *RR*, what kind of shape or pattern do you expect to see in a lag-1 return plot of each series?
+  + *SampEn*, what kind of shape or pattern do you expect to see in a lag-1 return plot of each series?
 * Create the return plots!
 
 

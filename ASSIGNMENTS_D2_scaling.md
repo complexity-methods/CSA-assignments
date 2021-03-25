@@ -28,15 +28,13 @@ editor_options:
 ---
 
 
-# **Fluctuation and Disperion analyses** {-
-}
+# **Fluctuation and Disperion analyses** {-}
 
-     
-     
-\BeginKnitrBlock{rmdimportant}<div class="rmdimportant">We will use the same data as in the previous assignment.</div>\EndKnitrBlock{rmdimportant}
-     
-     
-     
+    
+### Three time series {-}
+
+We are going to analyse the same 3 time series as last session, now using fluctuation and dispersion analysis. 
+
 **Importing data**
 
 Two ways:
@@ -44,7 +42,7 @@ Two ways:
 A. By downloading:
 
   1. Follow the link, e.g. for [`series.xlsx`](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.xlsx).
-  2. On the Github page, find a button marked **Download** (or **Raw** for textfiles).
+  2. On the Github page, find a button marked **Download** (or **Raw** for text files).
   3. Download the file
   4. Load it into `R` using the code below       
 
@@ -55,19 +53,19 @@ series <- rio::import("series.xlsx")
 ```
      
       
-B. By importing from Github:
+B. By directly importing the file in R from Github:
 
-   1. Copy the `url` associated with the **Download**  button [on Github](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.csv) (right-clik).
+   1. Copy the `url` associated with the **Download**  button [on Github](https://github.com/complexity-methods/CSA-assignments/blob/master/assignment_data/BasicTSA_arma/series.csv) (right-click).
    2. The copied path should contain the word 'raw' somewhere in the url.
-   3. Call `rio::import(url)`     
-   
+   3. Call `rio::import(url)`
         
 
 ```r
 library(rio)
 series <- rio::import("https://github.com/complexity-methods/CSA-assignments/raw/master/assignment_data/BasicTSA_arma/series.xlsx")
 ```
-       
+
+
         
         
       
@@ -79,7 +77,7 @@ series <- rio::import("https://github.com/complexity-methods/CSA-assignments/raw
 * Common data preparation before running fluctuation analyses like `SDA`:
     + Normalize the time series (using `sd` based on `N`, not `N-1`, e.g. by using `ts_standardise()`, or use function arguments)
     + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can pad the series with 0s, or make it shorter before analysis.
-* Perform `sda` on the 3 HRV time series, or any of the other series you already analysed.
+* Perform `sda` on the 3 time series, or any of the other series you already analysed.
 * Compare to what you find for `fd_sda` to the other techniques (`fd_RR`,`SampEn`, `acf`, `pacf`)
 
 
@@ -623,17 +621,6 @@ plotTS_multi(TS1surrogates)
 
 ```r
 library(fractal)
-```
-
-```
-## Loading required package: splus2R
-```
-
-```
-## Loading required package: ifultools
-```
-
-```r
 # Now we calculate FD for each series
 TS1surrogates_FD <- plyr::laply(1:Nsurrogates,function(s) fd_sda(y=TS1surrogates[,s], silent = TRUE)$fitRange$FD)
 
@@ -879,9 +866,9 @@ knitr::kable(x, digits = 2, booktabs=TRUE,formt="html")
 
 Source    FDsda   FDsdaAAFT.median   FDpsd   FDpsdAAFT.median
 -------  ------  -----------------  ------  -----------------
-TS1        1.61               1.57    1.61               1.58
-TS2        1.55               1.54    1.20               1.23
-TS3        1.58               1.57    1.51               1.54
+TS1        1.15               1.16    1.16               1.21
+TS2        1.50               1.52    1.48               1.52
+TS3        2.46               1.64    1.09               1.50
 
 
 

@@ -1,5 +1,5 @@
 ---
-title: "Day1 Intro Math of Change: Fitting Parameters of Analytic Solutions [Extra]"
+title: "EXTRA: Mathematics of Change: Fitting Parameters of Analytic Solutions."
 author: "Fred Hasselman"
 date: "1/14/2019"
 output: 
@@ -35,7 +35,7 @@ output:
 # **Fitting Parameters of Analytic Solutions [EXTRA]**
 
 
-## **Nonlinear Growth curves**
+## **Non-linear Growth curves**
 
 
 ### Fitting the Logistic Growth model in SPSS {.tabset .tabset-fade .tabset-pills}
@@ -55,7 +55,7 @@ This is data from an iteration of the logistic growth differential equation you 
             c. *r*, the growth rate.
      + Fill these in where it says `parameters` give all parameters a starting value of  $0.01$
 
-Take a good look at the analytic solution of the (stilized) logistic flow:
+Take a good look at the analytic solution of the (stylized) logistic flow:
 
 $$
 Y(t)  =  \frac{K * Y_0}{Y_0 + \left(K-Y_{0}\right) * e^{-r*t} }

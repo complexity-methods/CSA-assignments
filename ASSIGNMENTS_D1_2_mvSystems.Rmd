@@ -1,5 +1,5 @@
 ---
-title: "Day1 Intro Math of Change: Multivariate Models [Extra]"
+title: "Mathematics of Change Assignments - Multivariate Models"
 author: "Fred Hasselman"
 date: "1/14/2019"
 output: 
@@ -21,7 +21,7 @@ output:
     csl: apa.csl
     includes:
         before_body: assignmentstyle.html
-    pandoc_args: ["--number-offset","0"]
+    pandoc_args: ["--number-offset","1"]
 editor_options: 
   chunk_output_type: console
 ---
@@ -35,9 +35,9 @@ knitr::opts_chunk$set(include=TRUE, tidy = FALSE)
 
 By multivariate systems we do not simply mean there is more than 1 iterative process (dynamical variable), but that there is a coupling between at least two iterative processes that makes the outcomes of each individual process at each time step (partially) dependent on the previous time step of other processes.
 
-You'll start by expanding on the previous assignments, in which you modelled changes in the parameter values by implementing an `IF ... THEN` rule that evaluated whether some threshold level was reached. In the assignment you'll create a kind of **one-directional coupling**, or **supportive interaction**, which is just a precursor to modelling more interesting interaction dynamics.
+We'll start by expanding on the previous assignment ([EXTRA: van Geert's growth model](https://docs.google.com/spreadsheets/d/1DAg0u-zMFOIvRSDOZDxqnzyS0HQJg4FIXzJIMvEMwiI/edit?usp=sharing)), in which changes in the parameter values were modelled by implementing an `IF ... THEN` rule that evaluated whether some threshold level was reached. In the first assignment you'll create a kind of **one-directional coupling**, or **supportive interaction**, which is just a precursor to modelling more interesting interaction dynamics.
 
- You'll model the so-called Lottka-Volterra equations, representing **competetive interactions** between two iterative processes, also known as **predator-prey dynamics**. You can imagine these equations represent populations of *Foxes* and *Rabbits* in which the population of the  predators (Foxes) depends on the available prey (Rabbits) and vice versa. To do model these equations, you'll need to learn a bit about modelling **flows**: Continuous time differential equations. 
+You'll also model the so-called Lottka-Volterra equations, representing **competetive interactions** between two iterative processes, also known as **predator-prey dynamics**. You can imagine these equations represent populations of *Foxes* and *Rabbits* in which the population of the  predators (Foxes) depends on the available prey (Rabbits) and vice versa. To do model these equations, you'll need to learn a bit about modelling **flows**: Continuous time differential equations. 
 
 
 ## **One directional coupling**
@@ -49,7 +49,7 @@ In this assignment we'll keep using at least one 'conditional' rule and try to i
 
 ### Connected growers {.tabset .tabset-fade .tabset-pills}
 
-For this assignment, we'll use a different way to achieve the levels you created in the previous assignment in which you used `IF ... THEN` statements to achieve changes in dynamics. The conditional rules that change the parameters were 'given', we'll try to be a bit more dynamical... 
+For this assignment, we'll use a different way to achieve the levels created in the previous assignment in which   `IF ... THEN` statements were used to achieve changes in dynamics. The conditional rules that change the parameters were 'given', we'll try to be a bit more dynamical... 
 
 Have a look at [this spreadsheet](https://docs.google.com/spreadsheets/d/1cbC58yTg-pOoThMQY0UyzIQ3ZiaTosJlqQFkRHt9LJg/edit?usp=sharing) in which a model is implemented that is discussed in the following chapter by Paul van Geert:
 
@@ -408,8 +408,7 @@ When `delta` is relatively large, the fluctuations still resemble deterministic 
 
 ## **Beyond Foxes and Rabbits**
 
-In the [course book](https://darwin.pwo.ru.nl/skunkworks/courseware/1819_DCS/advmodels.html
-) we listed some more advanced models that build on the basic models we discussed here.
+In the [course book](https://complexity-methods.github.io/book/advmodels.html) we listed some more advanced models that build on the basic models we discussed here.
 
 ----
 

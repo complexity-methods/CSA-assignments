@@ -1,5 +1,5 @@
 ---
-title: "Math of Change Assignments"
+title: "Mathematics of Change Assignments - Univariate Systems"
 author: "Fred Hasselman"
 date: "1/14/2019"
 output: 
@@ -31,7 +31,7 @@ knitr::opts_chunk$set(include=TRUE, tidy = FALSE)
 ```
 
 
-# **Modelling (nonlinear) growth and Deterministic Chaos**
+# **Modelling (non-linear) growth and Deterministic Chaos**
 
 In this assignment you will examine two (relatively) simple one-dimensional maps based on the models implemented in a spreadsheet. Just copy the linked Google Sheet to a new on-line Google Sheet, or, save it to your computer and use your favourite spreadsheet software (e.g., Excel, Numbers) to explore the behaviour of the model.    
     
@@ -39,7 +39,7 @@ We will start with the *Linear Map* and then proceed to the slightly more compli
 
 </br>
 
-```{block2, useR, type='rmdnote'}
+```{block2, type='rmdnote'}
 Check the solutions of the assignments **after** you tried to do them on your own!    
 ```
 
@@ -49,7 +49,7 @@ Check the solutions of the assignments **after** you tried to do them on your ow
 
 </br>
 
-Equation \@ref(eq:linmap) is the ordinary difference equation (ODE) discussed in [the course book](https://darwin.pwo.ru.nl/skunkworks/book/courseware/1819_CMBS/introduction-to-the-mathematics-of-change.html) and is called the *Linear Map*:
+Equation \@ref(eq:linmap) is the ordinary difference equation (ODE) discussed in [the course book](https://complexity-methods.github.io/book/introduction-to-the-mathematics-of-change.html) and is called the *Linear Map*:
   
 \begin{equation}
 Y_{i+1} = Y_{i=0} + r*Y_i
@@ -169,7 +169,7 @@ The best (and easiest) way to simulate these simple models in `R` is to create a
 
 #### Questions {-}
 
-For the Linear Map you could use this template ([also see the notes in the course book](https://darwin.pwo.ru.nl/skunkworks/courseware/1819_CMBS/book/implementing-iterative-functions.html)):
+For the Linear Map you could use this template ([also see the notes in the course book](https://complexity-methods.github.io/book/implementing-iterative-functions.html)):
 
 ```{r, eval=FALSE, include=TRUE, tidy=FALSE}
 # TEMPLATE
@@ -184,7 +184,7 @@ linearMap <- function(Y0 = 0, r = 1, N = 100){
     # Then, you need create the iteration using a for(... in ...){...} loop
     for(i in 1:(N-1)){
         
-    Y[i+1] <- # !!Implement the code for the linear or Quadratic map here!!
+    Y[i+1] <-       # !!Implement the code for the linear or Quadratic map here!!
         
     }
     
@@ -221,7 +221,7 @@ linearMap <- function(Y0 = 0, r = 1, N = 100){
 
 </br>
 
-### Plot the timeseries {.tabset .tabset-fade .tabset-pills}
+### Plot the time series {.tabset .tabset-fade .tabset-pills}
 
 #### Questions {-}
 
@@ -249,7 +249,7 @@ Have a look at the examples on different ways to [plot time series in `R` in the
 plot(linearMap(Y0=0.1,r=1.08,N=100), type = "l")
 ```
 
-`R` has specialized objects to represent time series, and functions and packages for time series analysis. These are especially convenient for plotting time and date information on the X-axis. See the examples on plotting [time series in `R` in Chapter 3](https://darwin.pwo.ru.nl/skunkworks/courseware/book/1819_CMBS/plotTS.html).
+`R` has specialized objects to represent time series, and functions and packages for time series analysis. These are especially convenient for plotting time and date information on the X-axis. See the examples on plotting [time series in `R` in Chapter 3](https://complexity-methods.github.io/book/plotTS.html).
   
 </br>
 </br>
@@ -354,9 +354,9 @@ The return plot is an important tool for getting a 'first impression' of the nat
     + The points form a parabola
     + The return plot for both maps can be seen [here](https://docs.google.com/spreadsheets/d/17PBTvGa1Hu9spqEQGuhpwWXGeY7Nujkm09pxcppKPn4/edit?usp=sharing) 
     
-* Why a parabola? Think about what the iterative process represents: It is the rule that changes the value of Y at one point in time, into a value at ther next point in time. The only relationship that can exist between two points is the difference equation... work out the brackets, what kind of equation is this?
+* Why a parabola? Think about what the iterative process represents: It is the rule that changes the value of Y at one point in time, into a value at the next point in time. The only relationship that can exist between two points is the difference equation... work out the brackets, what kind of equation is this?
 
-* For the linear map, the same thing holds, what kind of equation is the linear map? Now you can probably also deduce what the return maps of a cubic and quartic equztion look like... try it!
+* For the linear map, the same thing holds, what kind of equation is the linear map? Now you can probably also deduce what the return maps of a cubic and quartic equation look like... try it!
 
 
 </br>
@@ -414,7 +414,7 @@ logisticMap <- function(Y0 = 0.01, r = 1, N = 100){
     # Then, you need create the iteratation
     for(i in 1:(N-1)){
         
-    Y[i+1] <- # !!Implement the linear or logistic map here!!
+    Y[i+1] <-      # !!Implement the linear or logistic map here!!
         
     }
     
@@ -451,7 +451,7 @@ logisticMap <- function(Y0 = 0.01, r = 1, N = 100){
 ```
 
 
-### Plot the timeseries {.tabset .tabset-fade .tabset-pills}
+### Plot the time series {.tabset .tabset-fade .tabset-pills}
 
 #### Questions {-}
 
@@ -498,4 +498,92 @@ par(op)
 * [`growth_ac_cond()`](https://fredhasselman.github.io/casnet/reference/growth_ac_cond.html)
 
 </br>
+
+
+# **EXTRA**: van Geert's growth model
+
+In this assignment you'll build a more sophisticated growth model and look at its properties. The model will be the growth model by Van Geert (1991). You can try to code the models following the hints in section \@ref(moc1R).
+
+
+## The growth model by Van Geert (1991) {-}
+
+The growth model by Van Geert has the following form: 
+
+\begin{equation}
+L_{t+1} = L_t * (1 + r - r * \frac{L_t}{K})
+(\#eq:vanG)
+\end{equation}
+
+Note the similarities to the logistic map.
+
+### The growth model in a spreadsheet {.tabset .tabset-fade .tabset-pills}
+
+* Go to the following [GoogleSheet](https://docs.google.com/spreadsheets/d/1DAg0u-zMFOIvRSDOZDxqnzyS0HQJg4FIXzJIMvEMwiI/edit?usp=sharing) and download or copy it to a new browser tab.
+
+
+#### Questions {-}
+
+* The constants are defined as: 
+    + $r$ in `A5`
+    + $L_0$ in `A6`
+    + $K$ in cell `A7`. This is the *carrying capacity*. It is set to the value $1$ in cell `B7`.
+* Start with the following values:
+    + $r = 1.2$
+    + $L_0 = 0.01$
+* You can start playing with the values for the parameters and the initial values in cells `B5`, `B6` and `B7`. To study its behavior, be sure to try the following growth parameters:
+    + $r = 1.2$
+    + $r = 2.2$
+    + $r = 2.5$
+    + $r = 2.7$
+    + $r = 2.9$
+* For the carrying capacity $K$ (cell `B7`) you can try the following values:
+    + $K = 1.5$
+    + $K = 0.5$. (Leave $r = 2.9$. Look at the value on the vertical axis!)
+* Changes in the values of $K$ have an effect on the height of the graph. The pattern itself also changes a bit. 
+    + Can you explain why this is so?
+
+#### Answers {-}
+
+* Changes in the values of $K$ have an effect on the height of the graph. The pattern itself also changes a bit. 
+    + Can you explain why this is so?
+
+Larger values can enter the iterative process if $K$ increased.
+
+
+## Conditional growth: Jumps and Stages 
+
+### Auto-conditional jumps {-}
+
+Suppose we want to model that the growth rate $r$ increases after a certain amount has been learned. In general, this is a very common phenomenon, for instance: when becoming proficient at a skill, growth (in proficiency) is at first slow, but then all of a sudden there can be a jump to the appropriate (and sustained) level of proficiency.
+
+The second tab of the google sheet contains an example.
+
+#### Questions {-}
+
+*  Suppose we want the parameter to change when a growth level of $0.2$ is reached. This is modelled using an `IF` statement which looks something like this: `IF` $L > 0.2$ then use the parameter value in `C5`, otherwise use the parameter value in `B5`. 
+    + Excel has a built in `IF` function (may be `ALS` in Dutch). Check the cells to figure out how the level change is impemented. 
+    + Try changing the value of $r$ in `C5` into: $1, 2, 2.8, 2.9, 3$. 
+
+### Auto-conditional stages {-}
+
+Another conditional change we might want to explore is that when a certain growth level is reached the carrying capacity $K$ increases, reflecting that new resources have become available to support further growth. This is modelled on the third and fourth tab of spreadsheet [van Geert (2 stages); van Geert (3 stages)]
+
+#### Questions {-}
+
+* Now we want $K$ to change, so type $1$ in `B7`, $2$ in `C7`.
+* When $L > 0.99$, $K$ changes to the value in `C7`. Keep $r = 0.2$ (`B5`).
+* Change $K$ in `C7` to other values.
+* The growth rate `r` changes after reaching $L > 0.99$. Start with a value of $0.3$ in `C5` and set $K$ in `C7` to $2$ again. 
+    + Also try setting `r` in `C5` to $1, 2.1, 2.5, 2.6, 3$.
+* Using this method you can of course add stages, see the tab `van Geert (3 stages)`
+
+
+#### Demonstrations of dynamic modeling using spreadsheets
+
+See the website by [Paul Van Geert](http://www.paulvangeert.nl/research.htm), scroll down to see models of:
+
+* Learning and Teaching
+* Behaviour Modification
+* Connected Growers
+* Interaction during Play
 
