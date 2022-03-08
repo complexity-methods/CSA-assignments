@@ -24,7 +24,6 @@ output:
     pandoc_args: ["--number-offset","4"]
 editor_options: 
   chunk_output_type: console
-
 ---
 
 
@@ -120,7 +119,7 @@ plot_grid(plotlist = list(p7,p8,p9,p10),ncol = 2)
 * Common data preparation before running fluctuation analyses like `SDA`:
     + Normalize the time series (using `sd` based on `N`, not `N-1`, e.g. by using `ts_standardise()`, or use the arguments of the function `fd_sda()`)
     + Check whether time series length is a power of `2`. If you use `nextn(length(TS),factors=2)`, the number you get is the length your time series should be to create equal bin sizes. You can pad the series with 0s before analysis, look at package `invctr` at the infix function `%+]%`.
-* Perform `sda` on the 5 time series, use `minData = 6` to exclude the larger bin sizes from estimating  the scaling relation.
+* Perform `sda` on the 5 time series, use `dataMin = 6` to exclude the larger bin sizes from estimating  the scaling relation.
 * Compare what you find for `fd_sda()` to the other techniques (`fd_RR`,`SampEn`, `acf`, `pacf`)
 
 
@@ -143,14 +142,14 @@ Y <- 1:10
 Y %+]% 6
 
 # The default of fd_sda() is to standardise in the mean and sd
-fdSDA1 <- fd_sda(series$TS_1, minData = 6, doPlot = TRUE, tsName = "TS1")
-fdSDA2 <- fd_sda(series$TS_2, minData = 6, doPlot = TRUE, tsName = "TS2")
-fdSDA3 <- fd_sda(series$TS_3, minData = 6, doPlot = TRUE, tsName = "TS3")
-fdSDA4 <- fd_sda(series$TS_4, minData = 6, doPlot = TRUE, tsName = "TS4")
-fdSDA5 <- fd_sda(series$TS_5, minData = 6, doPlot = TRUE, tsName = "TS5")
+fdSDA1 <- fd_sda(series$TS_1, dataMin = 6, doPlot = TRUE, tsName = "TS1")
+fdSDA2 <- fd_sda(series$TS_2, dataMin = 6, doPlot = TRUE, tsName = "TS2")
+fdSDA3 <- fd_sda(series$TS_3, dataMin = 6, doPlot = TRUE, tsName = "TS3")
+fdSDA4 <- fd_sda(series$TS_4, dataMin = 6, doPlot = TRUE, tsName = "TS4")
+fdSDA5 <- fd_sda(series$TS_5, dataMin = 6, doPlot = TRUE, tsName = "TS5")
 
 # If you ask to return the powerlaw (returnPLAW = TRUE) the function plotFD_loglog() can make the plot as well
-fdS5 <- fd_sda(series$TS_5, returnPLAW = TRUE, minData = 6, doPlot = TRUE, tsName = "TS5")
+fdS5 <- fd_sda(series$TS_5, returnPLAW = TRUE, dataMin = 6, doPlot = TRUE, tsName = "TS5")
 plotFD_loglog(fdS5, title = "SDA", subtitle = "TS5")
 ```
 

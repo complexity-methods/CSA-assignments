@@ -24,7 +24,6 @@ output:
     pandoc_args: ["--number-offset","4"]
 editor_options: 
   chunk_output_type: console
-
 ---
 
 
@@ -96,7 +95,7 @@ series$TS_5 <- noise_powerlaw(alpha = -2, N = 1024, standardise = TRUE)
 * Common data preparation before running fluctuation analyses like `SDA`:
     + Normalize the time series (using `sd` based on `N`, not `N-1`, e.g. by using `ts_standardise()`, or use the arguments of the function `fd_sda()`)
     + Check whether time series length is a power of `2`. If you use `nextn(length(TS),factors=2)`, the number you get is the length your time series should be to create equal bin sizes. You can pad the series with 0s before analysis, look at package `invctr` at the infix function `%+]%`.
-* Perform `sda` on the 5 time series, use `minData = 6` to exclude the larger bin sizes from estimating  the scaling relation.
+* Perform `sda` on the 5 time series, use `dataMin = 6` to exclude the larger bin sizes from estimating  the scaling relation.
 * Compare what you find for `fd_sda()` to the other techniques (`fd_RR`,`SampEn`, `acf`, `pacf`)
 
 
@@ -121,13 +120,13 @@ Y %+]% 6
 ##  [1]  1  2  3  4  5  6  7  8  9 10  0  0  0  0  0  0
 
 # The default of fd_sda() is to standardise in the mean and sd
-fdSDA1 <- fd_sda(series$TS_1, minData = 6, doPlot = TRUE, tsName = "TS1")
+fdSDA1 <- fd_sda(series$TS_1, dataMin = 6, doPlot = TRUE, tsName = "TS1")
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-1.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
 
 ```
 ## 
@@ -136,40 +135,19 @@ fdSDA1 <- fd_sda(series$TS_1, minData = 6, doPlot = TRUE, tsName = "TS1")
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.64 | FD = 1.64 
+## Slope = -0.62 | FD = 1.62 
 ## 
 ##  Fit range (n = 8)
 ## Slope = -0.56 | FD = 1.56
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
-fdSDA2 <- fd_sda(series$TS_2, minData = 6, doPlot = TRUE, tsName = "TS2")
+fdSDA2 <- fd_sda(series$TS_2, dataMin = 6, doPlot = TRUE, tsName = "TS2")
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
-
-```
-## 
-## ~~~o~~o~~casnet~~o~~o~~~
-## 
-##  Standardised Dispersion Analysis 
-## 
-##  Full range (n = 10)
-## Slope = -0.58 | FD = 1.58 
-## 
-##  Fit range (n = 8)
-## Slope = -0.39 | FD = 1.39
-## 
-## ~~~o~~o~~casnet~~o~~o~~~
-fdSDA3 <- fd_sda(series$TS_3, minData = 6, doPlot = TRUE, tsName = "TS3")
-## 
-## 
-## fd_sda:	Sample rate was set to 1.
-```
-
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-3.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-3.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-4.png)<!-- -->
 
 ```
 ## 
@@ -178,19 +156,19 @@ fdSDA3 <- fd_sda(series$TS_3, minData = 6, doPlot = TRUE, tsName = "TS3")
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.64 | FD = 1.64 
+## Slope = -0.45 | FD = 1.45 
 ## 
 ##  Fit range (n = 8)
-## Slope = -0.59 | FD = 1.59
+## Slope = -0.32 | FD = 1.32
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
-fdSDA4 <- fd_sda(series$TS_4, minData = 6, doPlot = TRUE, tsName = "TS4")
+fdSDA3 <- fd_sda(series$TS_3, dataMin = 6, doPlot = TRUE, tsName = "TS3")
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-4.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-5.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-6.png)<!-- -->
 
 ```
 ## 
@@ -199,19 +177,40 @@ fdSDA4 <- fd_sda(series$TS_4, minData = 6, doPlot = TRUE, tsName = "TS4")
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.16 | FD = 1.16 
+## Slope = -0.65 | FD = 1.65 
 ## 
 ##  Fit range (n = 8)
-## Slope = -0.15 | FD = 1.15
+## Slope = -0.61 | FD = 1.61
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
-fdSDA5 <- fd_sda(series$TS_5, minData = 6, doPlot = TRUE, tsName = "TS5")
+fdSDA4 <- fd_sda(series$TS_4, dataMin = 6, doPlot = TRUE, tsName = "TS4")
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-5.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-7.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-8.png)<!-- -->
+
+```
+## 
+## ~~~o~~o~~casnet~~o~~o~~~
+## 
+##  Standardised Dispersion Analysis 
+## 
+##  Full range (n = 10)
+## Slope = -0.33 | FD = 1.33 
+## 
+##  Fit range (n = 8)
+## Slope = -0.2 | FD = 1.2
+## 
+## ~~~o~~o~~casnet~~o~~o~~~
+fdSDA5 <- fd_sda(series$TS_5, dataMin = 6, doPlot = TRUE, tsName = "TS5")
+## 
+## 
+## (mf)dfa:	Sample rate was set to 1.
+```
+
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-9.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-10.png)<!-- -->
 
 ```
 ## 
@@ -223,18 +222,18 @@ fdSDA5 <- fd_sda(series$TS_5, minData = 6, doPlot = TRUE, tsName = "TS5")
 ## Slope = -0.11 | FD = 1.11 
 ## 
 ##  Fit range (n = 8)
-## Slope = -0.03 | FD = 1.03
+## Slope = -0.04 | FD = 1.04
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 
 # If you ask to return the powerlaw (returnPLAW = TRUE) the function plotFD_loglog() can make the plot as well
-fdS5 <- fd_sda(series$TS_5, returnPLAW = TRUE, minData = 6, doPlot = TRUE, tsName = "TS5")
+fdS5 <- fd_sda(series$TS_5, returnPLAW = TRUE, dataMin = 6, doPlot = TRUE, tsName = "TS5")
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-6.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-11.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-12.png)<!-- -->
 
 ```
 ## 
@@ -246,13 +245,13 @@ fdS5 <- fd_sda(series$TS_5, returnPLAW = TRUE, minData = 6, doPlot = TRUE, tsNam
 ## Slope = -0.11 | FD = 1.11 
 ## 
 ##  Fit range (n = 8)
-## Slope = -0.03 | FD = 1.03
+## Slope = -0.04 | FD = 1.04
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 plotFD_loglog(fdS5, title = "SDA", subtitle = "TS5")
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-7.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-13.png)<!-- -->
 
 
 ###  Spectral Slope {.tabset .tabset-fade .tabset-pills}
@@ -291,10 +290,10 @@ Y %+]% 6
 fdPSD1 <- fd_psd(series$TS_1, doPlot = TRUE, tsName = "TS1")
 ## 
 ## 
-## fd_psd:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-1.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
 
 ```
 ## 
@@ -312,10 +311,10 @@ fdPSD1 <- fd_psd(series$TS_1, doPlot = TRUE, tsName = "TS1")
 fdPSD2 <- fd_psd(series$TS_2, doPlot = TRUE, tsName = "TS2")
 ## 
 ## 
-## fd_psd:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-3.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-4.png)<!-- -->
 
 ```
 ## 
@@ -333,10 +332,10 @@ fdPSD2 <- fd_psd(series$TS_2, doPlot = TRUE, tsName = "TS2")
 fdPSD3 <- fd_psd(series$TS_3, doPlot = TRUE, tsName = "TS3")
 ## 
 ## 
-## fd_psd:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-3.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-5.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-6.png)<!-- -->
 
 ```
 ## 
@@ -354,10 +353,10 @@ fdPSD3 <- fd_psd(series$TS_3, doPlot = TRUE, tsName = "TS3")
 fdPSD4 <- fd_psd(series$TS_4, doPlot = TRUE, tsName = "TS4")
 ## 
 ## 
-## fd_psd:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-4.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-7.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-8.png)<!-- -->
 
 ```
 ## 
@@ -366,19 +365,19 @@ fdPSD4 <- fd_psd(series$TS_4, doPlot = TRUE, tsName = "TS4")
 ##  Power Spectral Density Slope 
 ## 
 ##  All frequencies (n = 512)
-## Slope = -0.94 | FD = 1.21 
+## Slope = -1.05 | FD = 1.19 
 ## 
-##  Hurvich-Deo (n = 67)
-## Slope = -0.97 | FD = 1.21
+##  Hurvich-Deo (n = 55)
+## Slope = -1.03 | FD = 1.19
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 fdPSD5 <- fd_psd(series$TS_5, doPlot = TRUE, tsName = "TS5")
 ## 
 ## 
-## fd_psd:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-5.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-9.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-10.png)<!-- -->
 
 ```
 ## 
@@ -387,10 +386,10 @@ fdPSD5 <- fd_psd(series$TS_5, doPlot = TRUE, tsName = "TS5")
 ##  Power Spectral Density Slope 
 ## 
 ##  All frequencies (n = 512)
-## Slope = -1.96 | FD = 1.1 
+## Slope = -1.97 | FD = 1.1 
 ## 
-##  Hurvich-Deo (n = 38)
-## Slope = -2.02 | FD = 1.1
+##  Hurvich-Deo (n = 107)
+## Slope = -1.97 | FD = 1.1
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -431,10 +430,10 @@ Y %+]% 6
 fdDFA1 <- fd_dfa(series$TS_1, doPlot = TRUE, tsName = "TS1")
 ## 
 ## 
-## fd_dfa:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-1.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-2.png)<!-- -->
 
 ```
 ## 
@@ -443,19 +442,21 @@ fdDFA1 <- fd_dfa(series$TS_1, doPlot = TRUE, tsName = "TS1")
 ##  Detrended FLuctuation Analysis 
 ## 
 ##  Full range (n = 8)
-## Slope = 0.44 | FD = 1.55 
+## Slope = 0.39 | FD = 1.6 
 ## 
-##  Exclude large bin sizes (n = 7)
-## Slope = 0.45 | FD = 1.54
+##  Exclude large bin sizes (n = 8)
+## Slope = 0.39 | FD = 1.6 
+## 
+##  Detrending: poly
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 fdDFA2 <- fd_dfa(series$TS_2, doPlot = TRUE, tsName = "TS2")
 ## 
 ## 
-## fd_dfa:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-2.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-3.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-4.png)<!-- -->
 
 ```
 ## 
@@ -464,19 +465,21 @@ fdDFA2 <- fd_dfa(series$TS_2, doPlot = TRUE, tsName = "TS2")
 ##  Detrended FLuctuation Analysis 
 ## 
 ##  Full range (n = 8)
-## Slope = 1.1 | FD = 1.16 
+## Slope = 1.36 | FD = 1.1 
 ## 
-##  Exclude large bin sizes (n = 7)
-## Slope = 1.23 | FD = 1.12
+##  Exclude large bin sizes (n = 8)
+## Slope = 1.36 | FD = 1.1 
+## 
+##  Detrending: poly
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 fdDFA3 <- fd_dfa(series$TS_3, doPlot = TRUE, tsName = "TS3")
 ## 
 ## 
-## fd_dfa:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-3.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-5.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-6.png)<!-- -->
 
 ```
 ## 
@@ -485,19 +488,21 @@ fdDFA3 <- fd_dfa(series$TS_3, doPlot = TRUE, tsName = "TS3")
 ##  Detrended FLuctuation Analysis 
 ## 
 ##  Full range (n = 8)
-## Slope = 0.47 | FD = 1.52 
+## Slope = 0.4 | FD = 1.58 
 ## 
-##  Exclude large bin sizes (n = 7)
-## Slope = 0.47 | FD = 1.53
+##  Exclude large bin sizes (n = 8)
+## Slope = 0.4 | FD = 1.58 
+## 
+##  Detrending: poly
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 fdDFA4 <- fd_dfa(series$TS_4, doPlot = TRUE, tsName = "TS4")
 ## 
 ## 
-## fd_dfa:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-4.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-7.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-8.png)<!-- -->
 
 ```
 ## 
@@ -506,19 +511,21 @@ fdDFA4 <- fd_dfa(series$TS_4, doPlot = TRUE, tsName = "TS4")
 ##  Detrended FLuctuation Analysis 
 ## 
 ##  Full range (n = 8)
-## Slope = 0.96 | FD = 1.21 
+## Slope = 0.91 | FD = 1.24 
 ## 
-##  Exclude large bin sizes (n = 7)
-## Slope = 0.95 | FD = 1.22
+##  Exclude large bin sizes (n = 8)
+## Slope = 0.91 | FD = 1.24 
+## 
+##  Detrending: poly
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 fdDFA5 <- fd_dfa(na.exclude(series$TS_5), doPlot = TRUE, tsName = "TS5")
 ## 
 ## 
-## fd_dfa:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-5.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-9.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-10.png)<!-- -->
 
 ```
 ## 
@@ -527,10 +534,12 @@ fdDFA5 <- fd_dfa(na.exclude(series$TS_5), doPlot = TRUE, tsName = "TS5")
 ##  Detrended FLuctuation Analysis 
 ## 
 ##  Full range (n = 8)
-## Slope = 1.41 | FD = 1.09 
+## Slope = 1.3 | FD = 1.11 
 ## 
-##  Exclude large bin sizes (n = 7)
-## Slope = 1.45 | FD = 1.08
+##  Exclude large bin sizes (n = 8)
+## Slope = 1.3 | FD = 1.11 
+## 
+##  Detrending: poly
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -568,9 +577,9 @@ Table: (\#tab:unnamed-chunk-9)FD based on limited fit range
 
 |    |  TS1|  TS2|  TS3|  TS4|  TS5|
 |:---|----:|----:|----:|----:|----:|
-|SDA | 1.56| 1.39| 1.59| 1.15| 1.03|
-|PSD | 1.55| 1.38| 1.64| 1.21| 1.10|
-|DFA | 1.54| 1.12| 1.53| 1.22| 1.08|
+|SDA | 1.56| 1.32| 1.61| 1.20| 1.04|
+|PSD | 1.55| 1.38| 1.64| 1.19| 1.10|
+|DFA | 1.60| 1.10| 1.58| 1.24| 1.11|
 
 </br>
 
@@ -593,9 +602,9 @@ Table: (\#tab:unnamed-chunk-10)FD based on full fit range
 
 |    |  TS1|  TS2|  TS3|  TS4|  TS5|
 |:---|----:|----:|----:|----:|----:|
-|SDA | 1.64| 1.58| 1.64| 1.16| 1.11|
-|PSD | 1.53| 1.43| 1.53| 1.21| 1.10|
-|DFA | 1.55| 1.16| 1.52| 1.21| 1.09|
+|SDA | 1.62| 1.45| 1.65| 1.33| 1.11|
+|PSD | 1.53| 1.43| 1.53| 1.19| 1.10|
+|DFA | 1.60| 1.10| 1.58| 1.24| 1.11|
 
 
 
@@ -697,7 +706,7 @@ fd_sda(HBI1)
 ```
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -705,10 +714,10 @@ fd_sda(HBI1)
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.18 | FD = 1.18 
+## Slope = -0.38 | FD = 1.38 
 ## 
-##  Fit range (n = 8)
-## Slope = -0.19 | FD = 1.19
+##  Fit range (n = 4)
+## Slope = -0.13 | FD = 1.13
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -720,18 +729,20 @@ fd_dfa(HBI1)
 ```
 ## 
 ## 
-## fd_dfa:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ## 
 ##  Detrended FLuctuation Analysis 
 ## 
-##  Full range (n = 7)
-## Slope = 0.9 | FD = 1.24 
+##  Full range (n = 8)
+## Slope = 0.93 | FD = 1.23 
 ## 
-##  Exclude large bin sizes (n = 6)
-## Slope = 0.97 | FD = 1.21
+##  Exclude large bin sizes (n = 8)
+## Slope = 0.93 | FD = 1.23 
+## 
+##  Detrending: poly
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -743,7 +754,7 @@ fd_psd(HBI1)
 ```
 ## 
 ## 
-## fd_psd:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -767,7 +778,7 @@ fd_sda(HBI2)
 ```
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -775,10 +786,10 @@ fd_sda(HBI2)
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.08 | FD = 1.08 
+## Slope = -0.34 | FD = 1.34 
 ## 
-##  Fit range (n = 8)
-## Slope = -0.05 | FD = 1.05
+##  Fit range (n = 4)
+## Slope = -0.03 | FD = 1.03
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -790,18 +801,20 @@ fd_dfa(HBI2)
 ```
 ## 
 ## 
-## fd_dfa:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ## 
 ##  Detrended FLuctuation Analysis 
 ## 
-##  Full range (n = 7)
-## Slope = 1.17 | FD = 1.14 
+##  Full range (n = 8)
+## Slope = 1.27 | FD = 1.12 
 ## 
-##  Exclude large bin sizes (n = 6)
-## Slope = 1.32 | FD = 1.1
+##  Exclude large bin sizes (n = 8)
+## Slope = 1.27 | FD = 1.12 
+## 
+##  Detrending: poly
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -813,7 +826,7 @@ fd_psd(HBI2)
 ```
 ## 
 ## 
-## fd_psd:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -837,7 +850,7 @@ fd_sda(HBI3)
 ```
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -845,10 +858,10 @@ fd_sda(HBI3)
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.64 | FD = 1.64 
+## Slope = -0.69 | FD = 1.69 
 ## 
-##  Fit range (n = 8)
-## Slope = -0.62 | FD = 1.62
+##  Fit range (n = 4)
+## Slope = -0.54 | FD = 1.54
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -860,18 +873,20 @@ fd_dfa(HBI3)
 ```
 ## 
 ## 
-## fd_dfa:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ## 
 ##  Detrended FLuctuation Analysis 
 ## 
-##  Full range (n = 7)
-## Slope = 0.42 | FD = 1.57 
+##  Full range (n = 8)
+## Slope = 0.33 | FD = 1.66 
 ## 
-##  Exclude large bin sizes (n = 6)
-## Slope = 0.45 | FD = 1.55
+##  Exclude large bin sizes (n = 8)
+## Slope = 0.33 | FD = 1.66 
+## 
+##  Detrending: poly
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -883,7 +898,7 @@ fd_psd(HBI3)
 ```
 ## 
 ## 
-## fd_psd:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -964,7 +979,7 @@ fd_sda(HBI1_rnd)
 ```
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -972,10 +987,10 @@ fd_sda(HBI1_rnd)
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.84 | FD = 1.84 
+## Slope = -0.48 | FD = 1.48 
 ## 
-##  Fit range (n = 8)
-## Slope = -0.66 | FD = 1.66
+##  Fit range (n = 4)
+## Slope = -0.53 | FD = 1.53
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -987,18 +1002,20 @@ fd_dfa(HBI1_rnd)
 ```
 ## 
 ## 
-## fd_dfa:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ## 
 ##  Detrended FLuctuation Analysis 
 ## 
-##  Full range (n = 7)
-## Slope = 0.5 | FD = 1.5 
+##  Full range (n = 8)
+## Slope = 0.39 | FD = 1.6 
 ## 
-##  Exclude large bin sizes (n = 6)
-## Slope = 0.57 | FD = 1.44
+##  Exclude large bin sizes (n = 8)
+## Slope = 0.39 | FD = 1.6 
+## 
+##  Detrending: poly
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1010,7 +1027,7 @@ fd_psd(HBI1_rnd)
 ```
 ## 
 ## 
-## fd_psd:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -1018,10 +1035,10 @@ fd_psd(HBI1_rnd)
 ##  Power Spectral Density Slope 
 ## 
 ##  All frequencies (n = 384375)
-## Slope = 0.07 | FD = 1.53 
+## Slope = 0.02 | FD = 1.51 
 ## 
-##  Hurvich-Deo (n = 2747)
-## Slope = 2.13 | FD = 1.9
+##  Hurvich-Deo (n = 4810)
+## Slope = -0.52 | FD = 1.32
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1034,7 +1051,7 @@ fd_sda(HBI2_rnd)
 ```
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -1042,10 +1059,10 @@ fd_sda(HBI2_rnd)
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.48 | FD = 1.48 
+## Slope = -0.47 | FD = 1.47 
 ## 
-##  Fit range (n = 8)
-## Slope = -0.51 | FD = 1.51
+##  Fit range (n = 4)
+## Slope = -0.49 | FD = 1.49
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1057,18 +1074,20 @@ fd_dfa(HBI2_rnd)
 ```
 ## 
 ## 
-## fd_dfa:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ## 
 ##  Detrended FLuctuation Analysis 
 ## 
-##  Full range (n = 7)
-## Slope = 0.49 | FD = 1.51 
+##  Full range (n = 8)
+## Slope = 0.48 | FD = 1.52 
 ## 
-##  Exclude large bin sizes (n = 6)
-## Slope = 0.44 | FD = 1.55
+##  Exclude large bin sizes (n = 8)
+## Slope = 0.48 | FD = 1.52 
+## 
+##  Detrending: poly
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1080,7 +1099,7 @@ fd_psd(HBI2_rnd)
 ```
 ## 
 ## 
-## fd_psd:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -1088,10 +1107,10 @@ fd_psd(HBI2_rnd)
 ##  Power Spectral Density Slope 
 ## 
 ##  All frequencies (n = 384375)
-## Slope = 0.15 | FD = 1.56 
+## Slope = 0.03 | FD = 1.51 
 ## 
-##  Hurvich-Deo (n = 2322)
-## Slope = 0.14 | FD = 1.55
+##  Hurvich-Deo (n = 9431)
+## Slope = -0.36 | FD = 1.37
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1104,7 +1123,7 @@ fd_sda(HBI3_rnd)
 ```
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -1112,10 +1131,10 @@ fd_sda(HBI3_rnd)
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.62 | FD = 1.62 
+## Slope = -0.42 | FD = 1.42 
 ## 
-##  Fit range (n = 8)
-## Slope = -0.59 | FD = 1.59
+##  Fit range (n = 4)
+## Slope = -0.51 | FD = 1.51
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1127,18 +1146,20 @@ fd_dfa(HBI3_rnd)
 ```
 ## 
 ## 
-## fd_dfa:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ## 
 ##  Detrended FLuctuation Analysis 
 ## 
-##  Full range (n = 7)
-## Slope = 0.55 | FD = 1.46 
+##  Full range (n = 8)
+## Slope = 0.58 | FD = 1.44 
 ## 
-##  Exclude large bin sizes (n = 6)
-## Slope = 0.56 | FD = 1.45
+##  Exclude large bin sizes (n = 8)
+## Slope = 0.58 | FD = 1.44 
+## 
+##  Detrending: poly
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1150,7 +1171,7 @@ fd_psd(HBI3_rnd)
 ```
 ## 
 ## 
-## fd_psd:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -1158,10 +1179,10 @@ fd_psd(HBI3_rnd)
 ##  Power Spectral Density Slope 
 ## 
 ##  All frequencies (n = 384375)
-## Slope = 0.08 | FD = 1.53 
+## Slope = -0.05 | FD = 1.48 
 ## 
-##  Hurvich-Deo (n = 5107)
-## Slope = 0.41 | FD = 1.65
+##  Hurvich-Deo (n = 11018)
+## Slope = -0.03 | FD = 1.49
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1207,7 +1228,7 @@ HBI1_FDsda <- fd_sda(HBI1)$fitRange$FD
 ```
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -1215,10 +1236,10 @@ HBI1_FDsda <- fd_sda(HBI1)$fitRange$FD
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.18 | FD = 1.18 
+## Slope = -0.38 | FD = 1.38 
 ## 
-##  Fit range (n = 8)
-## Slope = -0.19 | FD = 1.19
+##  Fit range (n = 4)
+## Slope = -0.13 | FD = 1.13
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1230,7 +1251,7 @@ HBI2_FDsda <- fd_sda(HBI2)$fitRange$FD
 ```
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -1238,10 +1259,10 @@ HBI2_FDsda <- fd_sda(HBI2)$fitRange$FD
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.08 | FD = 1.08 
+## Slope = -0.34 | FD = 1.34 
 ## 
-##  Fit range (n = 8)
-## Slope = -0.05 | FD = 1.05
+##  Fit range (n = 4)
+## Slope = -0.03 | FD = 1.03
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1253,7 +1274,7 @@ HBI3_FDsda <- fd_sda(HBI3)$fitRange$FD
 ```
 ## 
 ## 
-## fd_sda:	Sample rate was set to 1.
+## (mf)dfa:	Sample rate was set to 1.
 ## 
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
@@ -1261,10 +1282,10 @@ HBI3_FDsda <- fd_sda(HBI3)$fitRange$FD
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.64 | FD = 1.64 
+## Slope = -0.69 | FD = 1.69 
 ## 
-##  Fit range (n = 8)
-## Slope = -0.62 | FD = 1.62
+##  Fit range (n = 4)
+## Slope = -0.54 | FD = 1.54
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1300,15 +1321,6 @@ HBI1surrogates_FD <- plyr::laply(1:Nsurrogates,function(s) fd_sda(y=HBI1surrogat
 
 # TS_4 Surrogates
 HBI2surrogates <- data.frame(tseries::surrogate(x = HBI2, ns = Nsurrogates, fft = FALSE, amplitude = FALSE))
-```
-
-```
-## Registered S3 method overwritten by 'quantmod':
-##   method            from
-##   as.zoo.data.frame zoo
-```
-
-```r
 colnames(HBI2surrogates) <- paste0("S",1:NCOL(HBI2surrogates))
 
 HBI2surrogates_FD <- plyr::laply(1:Nsurrogates,function(s) fd_sda(y=HBI2surrogates[,s], silent = TRUE)$fitRange$FD)
@@ -1366,9 +1378,9 @@ knitr::kable(x, digits = 2, booktabs=TRUE,formt="html")
 
 |Source | FDsda| FDsdaPhaseRND.median|
 |:------|-----:|--------------------:|
-|HBI1   |  1.19|                 1.53|
-|HBI2   |  1.05|                 1.55|
-|HBI3   |  1.62|                 1.51|
+|HBI1   |  1.13|                 1.49|
+|HBI2   |  1.03|                 1.50|
+|HBI3   |  1.54|                 1.51|
 
 
 <!-- **FD: SPECTRAL SLOPE** -->

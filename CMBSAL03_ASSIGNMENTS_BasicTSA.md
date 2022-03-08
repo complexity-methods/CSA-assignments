@@ -30,11 +30,11 @@ editor_options:
 
 
 
-# **Basic (Nonlinear) Time Aeries Analysis**
+# **Basic (Nonlinear) Time Series Analysis**
 
 </br>
 
-\BeginKnitrBlock{rmdimportant}<div class="rmdimportant">* Watch [**Assignment Lecture 03**](https://youtu.be/VSR5x0eOUYQ) video before you make these assignments.
+\BeginKnitrBlock{rmdimportant}<div class="rmdimportant">* Watch [**Assignment Lecture: Basic Time Series Analysis**](https://youtu.be/VSR5x0eOUYQ) video before you make these assignments.
 * [Chapter 4 + 5](https://complexity-methods.github.io/book/basic-time-series-analysis.html) summarises most of the information in the video lecture. 
 * Install R package *casnet*, [follow these instructions](https://fredhasselman.com/casnet/).</div>\EndKnitrBlock{rmdimportant}
 
@@ -390,7 +390,7 @@ fd_RR
 ##         globalAutoCoVariance = VAR$acf[1])
 ##     return(RelR)
 ## }
-## <bytecode: 0x7fa4e48750b0>
+## <bytecode: 0x1241c1170>
 ## <environment: namespace:casnet>
 ```
 

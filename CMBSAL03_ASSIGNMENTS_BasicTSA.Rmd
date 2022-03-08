@@ -33,12 +33,12 @@ library(tidyverse)
 ```
 
 
-# **Basic (Nonlinear) Time Aeries Analysis**
+# **Basic (Nonlinear) Time Series Analysis**
 
 </br>
 
 ```{block2, type='rmdimportant'}
-* Watch [**Assignment Lecture 03**](https://youtu.be/VSR5x0eOUYQ) video before you make these assignments.
+* Watch [**Assignment Lecture: Basic Time Series Analysis**](https://youtu.be/VSR5x0eOUYQ) video before you make these assignments.
 * [Chapter 4 + 5](https://complexity-methods.github.io/book/basic-time-series-analysis.html) summarises most of the information in the video lecture. 
 * Install R package *casnet*, [follow these instructions](https://fredhasselman.com/casnet/).
 ```

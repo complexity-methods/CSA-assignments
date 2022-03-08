@@ -40,7 +40,7 @@ There are several packages in `R` you could use to do `(C)RQA` analyses, but you
 ```
 
 
-See [Chapter 10 of the CSA-book](https://complexity-methods.github.io/book/notes-on-running-recurrence-quantification-analysis-in-r.html) for more information about conducting RQA in `R` (with `casnet`).
+See [Chapter 8-11 of the CSA-book](https://complexity-methods.github.io/book/unordered-categorical-data.html) for more information about conducting RQA in `R` (with `casnet`).
 
 
 ## **Categorical Auto-RQA** 
@@ -195,7 +195,7 @@ plot3D::lines3D(ly_emb$tau.0, ly_emb$tau.1, ly_emb$tau.2,  xlab= "Yt0", ylab = "
 
 
 # For Z
-lz <- lorenz[1:2048,3]
+lz <- lorenz[1:1024,3]
 
 # Search for the parameters,
 params <- est_parameters(lz)
@@ -245,7 +245,7 @@ emDim = 3
 # RQA analysis
 #(out <- rp_cl(lx,emDim = emDim, emLag = emLag, emRad = emRad))
 RMx <- rp(y1 = lx, emDim = emDim, emLag = emLag, emRad = emRad)
-out <- rp_measures(RMx)
+out <- rp_measures(RMx, silent = FALSE)
 ```
 
 
@@ -258,18 +258,13 @@ library(casnet)
 RM <- rp(y1 = lx, emDim = emDim, emLag = emLag)
 
 # plot it
-rp_plot(RM)
-
+rp_plot(RM, plotDimensions = TRUE)
 
 # Thresholded by the radius
-RMth <- di2bi(RM,emRad = emRad)
+RMth <- mat_di2bi(RM,emRad = emRad)
 
-# You cam also call rp wth emRad = NA
-RMth <- rp(y1 = lx, emDim = emDim, emLag = emLag, emRad = NA)
-
-
-rp_plot(RMth, plotDimensions = TRUE, plotMeasures = TRUE)
-
+# You can also call rp with emRad = NA and doPlot = TRUE
+RMth <- rp(y1 = lx, emDim = emDim, emLag = emLag, emRad = NA, doPlot = TRUE)
 ```
 
 
@@ -326,19 +321,19 @@ emDim <- max(out1$optimDim,out3$optimDim)
 ```{r}
 # Unthresholded
 RM1 <- rp(y1 = TS1, emDim = emDim, emLag = emLag)
-rp_plot(RM1, plotDimensions = TRUE)
+rp_plot(RM1)
 
 # Thresholded
 RM1t <- rp(y1 = TS1, emDim = emDim, emLag = emLag, emRad = NA)
-rp_plot(RM1t, plotDimensions = TRUE)
+rp_plot(RM1t)
 
 # Unthresholded
 RM3 <- rp(y1 = TS3, emDim = emDim, emLag = emLag)
-rp_plot(RM3, plotDimensions = TRUE)
+rp_plot(RM3)
 
 # Thresholded
 RM3t <- rp(y1 = TS3, emDim = emDim, emLag = emLag, emRad = NA)
-rp_plot(RM3t, plotDimensions = TRUE)
+rp_plot(RM3t)
 ```
 
 * Measures 

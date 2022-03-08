@@ -41,7 +41,7 @@ Cross recurrence analysis can be used to study synchronisation and coupling dire
 ### Categorical Cross-RQA and the Diagonal Recurrence Profile {.tabset .tabset-fade .tabset-pills}
 
 
-In 2008 there was some commotion about a speech held by Barack Obama in Milwaukee ([news item](https://www.cbsnews.com/news/obama-accused-of-plagiarism-in-speech/)). According to the media the speech was very similar to a speech held the gouverneur of Massachusetts (Deval Patrick) some years earlier. Here are some fragments of the speeches,
+In 2008 there was some commotion about a speech held by Barack Obama in Milwaukee ([news item](https://www.cbsnews.com/news/obama-accused-of-plagiarism-in-speech/)). According to the media the speech was very similar to a speech held the governor of Massachusetts (Deval Patrick) some years earlier. Here are some fragments of the speeches,
 
 Obama (2008):
 
@@ -106,23 +106,17 @@ crqa_out <- rp_measures(RM, silent = FALSE)
 ```
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
-## 
-##  Global Measures 
-##              Global Max.rec.points N.rec.points Recurrence.Rate Singular.points
-## 1 Recurrence Matrix           2652           71       0.0262574              15
-##   Divergence Repetitiveness Anisotropy
-## 1 0.06666667              0         NA
+##  Global Measures
+##   Global Max.points N.points     RR Singular Divergence Repetitiveness
+## 1 Matrix       2704       71 0.0263       15     0.0667              0
 ## 
 ## 
-##  Line-based Measures 
-##   Line.based N.lines N.points.on.lines      Measure      Rate     Mean  Max
-## 1   Diagonal      15                56  Determinism 0.7887324 3.733333   15
-## 2   Vertical       0                 0 V Laminarity 0.0000000      NaN -Inf
-## 3 Horizontal       0                 0 H Laminarity 0.0000000      NaN -Inf
-##   Entropy.of.lengths Relative.entropy CoV.of.lengths
-## 1           1.080574        0.2748275      0.9891909
-## 2           0.000000        0.0000000             NA
-## 3           0.000000        0.0000000             NA
+##  Line-based Measures
+##        Lines N.lines N.points Measure  Rate Mean Max.  ENT ENT_rel   CoV
+## 1   Diagonal      15       56     DET 0.789 3.73   15 1.08   0.273 0.989
+## 2   Vertical       1        0   V LAM 0.000 0.00    0 0.00   0.000    NA
+## 3 Horizontal       1        0   H LAM 0.000 0.00    0 0.00   0.000    NA
+## 4  V+H Total       2        0 V+H LAM 0.000 0.00    0 0.00   0.000   NaN
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -140,7 +134,6 @@ drp <- rp_diagProfile(RM = RM, diagWin = 40, doShuffle = FALSE, doPlot = FALSE)
 ```
 
 ```
-## 
 ## Profile 1
 ```
 
@@ -187,7 +180,7 @@ circle_y <- xy$y[1:500]
     + You can find a radius automatically, look in the `casnet` manual for function `est_radius()`. 
     + Most functions, like `rp_plot()` will call `est_radius()` if no radius is provided in the argument `emRad`.
     + Request a radius which will give us about 5\% recurrent points (default setting).
-    + You can create a thresholded matrix by calling function `di2bi()`,
+    + You can create a thresholded matrix by calling function `mat_di2bi()`,
 * Produce a plot of the recurrence matrix using `rp_plot()`. Look at the manual pages.
 
 * Can you understand what is going on? 
@@ -217,7 +210,6 @@ circle_y <- xy$y[1:500]
 library(rio)
 y1 <- sin(1:500*2*pi/67)
 y2 <- sin(.01*(1:500*2*pi/67)^2)
-
 
 # Time series
 plot(cbind(ts(y1),ts(y2)))
@@ -271,12 +263,13 @@ rp_plot(RM, plotDimensions = TRUE)
 
 ```r
 # Thresholded Matrix, based on 5% RR
-emRad <- est_radius(RM = RM, targetValue = .05)$Radius
+(emRad <- est_radius(RM = RM, targetValue = .05)$Radius)
 ```
 
 ```
 ## 
-## Searching for a radius that will yield 0.05 for RR
+## Searching for a radius that will yield 0.05 ± 0.01 for RR 
+## Iteration 1
 ```
 
 ```
@@ -284,8 +277,12 @@ emRad <- est_radius(RM = RM, targetValue = .05)$Radius
 ## Converged! Found an appropriate radius...
 ```
 
+```
+## [1] 0.06948034
+```
+
 ```r
-RP <- di2bi(RM, emRad = emRad)
+RP <- mat_di2bi(RM, emRad = emRad)
 rp_plot(RP, plotDimensions = TRUE)
 ```
 
@@ -297,7 +294,6 @@ drp <- rp_diagProfile(RP, diagWin = 50, doPlot = FALSE)
 ```
 
 ```
-## 
 ## Profile 1
 ```
 
@@ -376,12 +372,14 @@ rp_plot(RM, plotDimensions = TRUE)
 
 ```r
 # Thresholded Matrix, based on 5% RR
-emRad <- est_radius(RM = RM, targetValue = .05)$Radius
+(emRad <- est_radius(RM = RM, targetValue = .05)$Radius)
 ```
 
 ```
 ## 
-## Searching for a radius that will yield 0.05 for RR
+## Searching for a radius that will yield 0.05 ± 0.01 for RR 
+## Iteration 1 
+## Iteration 2
 ```
 
 ```
@@ -389,8 +387,12 @@ emRad <- est_radius(RM = RM, targetValue = .05)$Radius
 ## Converged! Found an appropriate radius...
 ```
 
+```
+## [1] 175.5259
+```
+
 ```r
-RP <- di2bi(RM, emRad = emRad)
+RP <- mat_di2bi(RM, emRad = emRad)
 rp_plot(RP, plotDimensions = TRUE)
 ```
 
@@ -402,7 +404,6 @@ drp <- rp_diagProfile(RP, diagWin = 100, doPlot = FALSE)
 ```
 
 ```
-## 
 ## Profile 1
 ```
 

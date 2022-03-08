@@ -150,7 +150,7 @@ circle_y <- xy$y[1:500]
     + You can find a radius automatically, look in the `casnet` manual for function `est_radius()`. 
     + Most functions, like `rp_plot()` will call `est_radius()` if no radius is provided in the argument `emRad`.
     + Request a radius which will give us about 5\% recurrent points (default setting).
-    + You can create a thresholded matrix by calling function `di2bi()`,
+    + You can create a thresholded matrix by calling function `mat_di2bi()`,
 * Produce a plot of the recurrence matrix using `rp_plot()`. Look at the manual pages.
 
 * Can you understand what is going on? 
@@ -180,7 +180,6 @@ library(rio)
 y1 <- sin(1:500*2*pi/67)
 y2 <- sin(.01*(1:500*2*pi/67)^2)
 
-
 # Time series
 plot(cbind(ts(y1),ts(y2)))
 
@@ -208,8 +207,8 @@ RM <- rp(y1=y1, y2=y2,emDim = emDim, emLag = emLag)
 rp_plot(RM, plotDimensions = TRUE)
 
 # Thresholded Matrix, based on 5% RR
-emRad <- est_radius(RM = RM, targetValue = .05)$Radius
-RP <- di2bi(RM, emRad = emRad)
+(emRad <- est_radius(RM = RM, targetValue = .05)$Radius)
+RP <- mat_di2bi(RM, emRad = emRad)
 rp_plot(RP, plotDimensions = TRUE)
 
 # The diagonal profile
@@ -242,7 +241,7 @@ plot(cbind(ts(circle_x),ts(circle_y)))
 
 # State Space
 plot(circle_x,circle_y,type="l", pty="s",main = "Mouse Circle Trace")
-````
+```
 
 * Estimate parameters
 
@@ -266,8 +265,8 @@ RM <- rp(y1=circle_x, y2=circle_y,emDim = emDim, emLag = emLag)
 rp_plot(RM, plotDimensions = TRUE)
 
 # Thresholded Matrix, based on 5% RR
-emRad <- est_radius(RM = RM, targetValue = .05)$Radius
-RP <- di2bi(RM, emRad = emRad)
+(emRad <- est_radius(RM = RM, targetValue = .05)$Radius)
+RP <- mat_di2bi(RM, emRad = emRad)
 rp_plot(RP, plotDimensions = TRUE)
 
 # The diagonal profile
