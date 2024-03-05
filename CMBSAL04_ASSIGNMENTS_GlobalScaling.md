@@ -27,7 +27,13 @@ editor_options:
 ---
 
 
-# **Fluctuation and Disperion analyses** {-}
+\BeginKnitrBlock{rmdimportant}<div class="rmdimportant">* Watch the [**Assignment Lecture: Scaling Phenomena**](https://youtu.be/yh4cn09KW2Q) video before you make these assignments.
+* [Chapter 6](https://complexity-methods.github.io/book/fluctuation-analyses-global-scaling.html) summarises most of the information in the video lecture. 
+* Install R package *casnet*, [follow these instructions](https://fredhasselman.com/casnet/).</div>\EndKnitrBlock{rmdimportant}
+
+
+
+# **Fluctuation and Dispersion analyses** {-}
 
     
 ### Three plus two time series {-}
@@ -67,7 +73,7 @@ series <- rio::import("https://github.com/complexity-methods/CSA-assignments/raw
 
 Remember this is what the time series and retun plots looked like.
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
 
 Now we'll add two additional time series, a synthetic 1/f noise signal using the function `noise_powerlaw()`, and an actual heart rate recording. 
@@ -82,7 +88,7 @@ series$TS_5 <- noise_powerlaw(alpha = -2, N = 1024, standardise = TRUE)
 ```
 
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 
 
@@ -126,7 +132,7 @@ fdSDA1 <- fd_sda(series$TS_1, dataMin = 6, doPlot = TRUE, tsName = "TS1")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-1.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-1.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
 
 ```
 ## 
@@ -147,7 +153,7 @@ fdSDA2 <- fd_sda(series$TS_2, dataMin = 6, doPlot = TRUE, tsName = "TS2")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-3.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-4.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-3.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-4.png)<!-- -->
 
 ```
 ## 
@@ -168,7 +174,7 @@ fdSDA3 <- fd_sda(series$TS_3, dataMin = 6, doPlot = TRUE, tsName = "TS3")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-5.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-6.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-5.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-6.png)<!-- -->
 
 ```
 ## 
@@ -189,7 +195,7 @@ fdSDA4 <- fd_sda(series$TS_4, dataMin = 6, doPlot = TRUE, tsName = "TS4")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-7.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-8.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-7.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-8.png)<!-- -->
 
 ```
 ## 
@@ -198,10 +204,10 @@ fdSDA4 <- fd_sda(series$TS_4, dataMin = 6, doPlot = TRUE, tsName = "TS4")
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.33 | FD = 1.33 
+## Slope = -0.34 | FD = 1.34 
 ## 
 ##  Fit range (n = 8)
-## Slope = -0.2 | FD = 1.2
+## Slope = -0.16 | FD = 1.16
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 fdSDA5 <- fd_sda(series$TS_5, dataMin = 6, doPlot = TRUE, tsName = "TS5")
@@ -210,7 +216,7 @@ fdSDA5 <- fd_sda(series$TS_5, dataMin = 6, doPlot = TRUE, tsName = "TS5")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-9.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-10.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-9.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-10.png)<!-- -->
 
 ```
 ## 
@@ -219,7 +225,7 @@ fdSDA5 <- fd_sda(series$TS_5, dataMin = 6, doPlot = TRUE, tsName = "TS5")
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.11 | FD = 1.11 
+## Slope = -0.13 | FD = 1.13 
 ## 
 ##  Fit range (n = 8)
 ## Slope = -0.04 | FD = 1.04
@@ -233,7 +239,7 @@ fdS5 <- fd_sda(series$TS_5, returnPLAW = TRUE, dataMin = 6, doPlot = TRUE, tsNam
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-11.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-12.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-11.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-12.png)<!-- -->
 
 ```
 ## 
@@ -242,7 +248,7 @@ fdS5 <- fd_sda(series$TS_5, returnPLAW = TRUE, dataMin = 6, doPlot = TRUE, tsNam
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.11 | FD = 1.11 
+## Slope = -0.13 | FD = 1.13 
 ## 
 ##  Fit range (n = 8)
 ## Slope = -0.04 | FD = 1.04
@@ -251,7 +257,7 @@ fdS5 <- fd_sda(series$TS_5, returnPLAW = TRUE, dataMin = 6, doPlot = TRUE, tsNam
 plotFD_loglog(fdS5, title = "SDA", subtitle = "TS5")
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-6-13.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-13.png)<!-- -->
 
 
 ###  Spectral Slope {.tabset .tabset-fade .tabset-pills}
@@ -293,7 +299,7 @@ fdPSD1 <- fd_psd(series$TS_1, doPlot = TRUE, tsName = "TS1")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-1.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-1.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-2.png)<!-- -->
 
 ```
 ## 
@@ -314,7 +320,7 @@ fdPSD2 <- fd_psd(series$TS_2, doPlot = TRUE, tsName = "TS2")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-3.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-4.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-3.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-4.png)<!-- -->
 
 ```
 ## 
@@ -335,7 +341,7 @@ fdPSD3 <- fd_psd(series$TS_3, doPlot = TRUE, tsName = "TS3")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-5.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-6.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-5.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-6.png)<!-- -->
 
 ```
 ## 
@@ -356,7 +362,7 @@ fdPSD4 <- fd_psd(series$TS_4, doPlot = TRUE, tsName = "TS4")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-7.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-8.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-7.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-8.png)<!-- -->
 
 ```
 ## 
@@ -365,10 +371,10 @@ fdPSD4 <- fd_psd(series$TS_4, doPlot = TRUE, tsName = "TS4")
 ##  Power Spectral Density Slope 
 ## 
 ##  All frequencies (n = 512)
-## Slope = -1.05 | FD = 1.19 
+## Slope = -1.14 | FD = 1.18 
 ## 
-##  Hurvich-Deo (n = 55)
-## Slope = -1.03 | FD = 1.19
+##  Hurvich-Deo (n = 37)
+## Slope = -0.8 | FD = 1.24
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 fdPSD5 <- fd_psd(series$TS_5, doPlot = TRUE, tsName = "TS5")
@@ -377,7 +383,7 @@ fdPSD5 <- fd_psd(series$TS_5, doPlot = TRUE, tsName = "TS5")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-9.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-7-10.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-9.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-10.png)<!-- -->
 
 ```
 ## 
@@ -386,10 +392,10 @@ fdPSD5 <- fd_psd(series$TS_5, doPlot = TRUE, tsName = "TS5")
 ##  Power Spectral Density Slope 
 ## 
 ##  All frequencies (n = 512)
-## Slope = -1.97 | FD = 1.1 
+## Slope = -1.91 | FD = 1.1 
 ## 
-##  Hurvich-Deo (n = 107)
-## Slope = -1.97 | FD = 1.1
+##  Hurvich-Deo (n = 52)
+## Slope = -1.67 | FD = 1.12
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -433,7 +439,7 @@ fdDFA1 <- fd_dfa(series$TS_1, doPlot = TRUE, tsName = "TS1")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-1.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-2.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-9-1.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-9-2.png)<!-- -->
 
 ```
 ## 
@@ -456,7 +462,7 @@ fdDFA2 <- fd_dfa(series$TS_2, doPlot = TRUE, tsName = "TS2")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-3.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-4.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-9-3.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-9-4.png)<!-- -->
 
 ```
 ## 
@@ -479,7 +485,7 @@ fdDFA3 <- fd_dfa(series$TS_3, doPlot = TRUE, tsName = "TS3")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-5.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-6.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-9-5.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-9-6.png)<!-- -->
 
 ```
 ## 
@@ -502,7 +508,7 @@ fdDFA4 <- fd_dfa(series$TS_4, doPlot = TRUE, tsName = "TS4")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-7.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-8.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-9-7.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-9-8.png)<!-- -->
 
 ```
 ## 
@@ -511,10 +517,10 @@ fdDFA4 <- fd_dfa(series$TS_4, doPlot = TRUE, tsName = "TS4")
 ##  Detrended FLuctuation Analysis 
 ## 
 ##  Full range (n = 8)
-## Slope = 0.91 | FD = 1.24 
+## Slope = 0.92 | FD = 1.23 
 ## 
 ##  Exclude large bin sizes (n = 8)
-## Slope = 0.91 | FD = 1.24 
+## Slope = 0.92 | FD = 1.23 
 ## 
 ##  Detrending: poly
 ## 
@@ -525,7 +531,7 @@ fdDFA5 <- fd_dfa(na.exclude(series$TS_5), doPlot = TRUE, tsName = "TS5")
 ## (mf)dfa:	Sample rate was set to 1.
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-9.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-8-10.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-9-9.png)<!-- -->![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-9-10.png)<!-- -->
 
 ```
 ## 
@@ -534,10 +540,10 @@ fdDFA5 <- fd_dfa(na.exclude(series$TS_5), doPlot = TRUE, tsName = "TS5")
 ##  Detrended FLuctuation Analysis 
 ## 
 ##  Full range (n = 8)
-## Slope = 1.3 | FD = 1.11 
+## Slope = 1.28 | FD = 1.11 
 ## 
 ##  Exclude large bin sizes (n = 8)
-## Slope = 1.3 | FD = 1.11 
+## Slope = 1.28 | FD = 1.11 
 ## 
 ##  Detrending: poly
 ## 
@@ -573,13 +579,13 @@ knitr::kable(data.frame(
 
 
 
-Table: (\#tab:unnamed-chunk-9)FD based on limited fit range
+Table: (\#tab:unnamed-chunk-10)FD based on limited fit range
 
 |    |  TS1|  TS2|  TS3|  TS4|  TS5|
 |:---|----:|----:|----:|----:|----:|
-|SDA | 1.56| 1.32| 1.61| 1.20| 1.04|
-|PSD | 1.55| 1.38| 1.64| 1.19| 1.10|
-|DFA | 1.60| 1.10| 1.58| 1.24| 1.11|
+|SDA | 1.56| 1.32| 1.61| 1.16| 1.04|
+|PSD | 1.55| 1.38| 1.64| 1.24| 1.12|
+|DFA | 1.60| 1.10| 1.58| 1.23| 1.11|
 
 </br>
 
@@ -598,13 +604,13 @@ knitr::kable(data.frame(
 
 
 
-Table: (\#tab:unnamed-chunk-10)FD based on full fit range
+Table: (\#tab:unnamed-chunk-11)FD based on full fit range
 
 |    |  TS1|  TS2|  TS3|  TS4|  TS5|
 |:---|----:|----:|----:|----:|----:|
-|SDA | 1.62| 1.45| 1.65| 1.33| 1.11|
-|PSD | 1.53| 1.43| 1.53| 1.19| 1.10|
-|DFA | 1.60| 1.10| 1.58| 1.24| 1.11|
+|SDA | 1.62| 1.45| 1.65| 1.34| 1.13|
+|PSD | 1.53| 1.43| 1.53| 1.18| 1.10|
+|DFA | 1.60| 1.10| 1.58| 1.23| 1.11|
 
 
 
@@ -987,10 +993,10 @@ fd_sda(HBI1_rnd)
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.48 | FD = 1.48 
+## Slope = -0.59 | FD = 1.59 
 ## 
 ##  Fit range (n = 4)
-## Slope = -0.53 | FD = 1.53
+## Slope = -0.49 | FD = 1.49
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1010,10 +1016,10 @@ fd_dfa(HBI1_rnd)
 ##  Detrended FLuctuation Analysis 
 ## 
 ##  Full range (n = 8)
-## Slope = 0.39 | FD = 1.6 
+## Slope = 0.44 | FD = 1.55 
 ## 
 ##  Exclude large bin sizes (n = 8)
-## Slope = 0.39 | FD = 1.6 
+## Slope = 0.44 | FD = 1.55 
 ## 
 ##  Detrending: poly
 ## 
@@ -1035,10 +1041,10 @@ fd_psd(HBI1_rnd)
 ##  Power Spectral Density Slope 
 ## 
 ##  All frequencies (n = 384375)
-## Slope = 0.02 | FD = 1.51 
+## Slope = 0.07 | FD = 1.53 
 ## 
-##  Hurvich-Deo (n = 4810)
-## Slope = -0.52 | FD = 1.32
+##  Hurvich-Deo (n = 2861)
+## Slope = 0.51 | FD = 1.68
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1059,10 +1065,10 @@ fd_sda(HBI2_rnd)
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.47 | FD = 1.47 
+## Slope = -0.59 | FD = 1.59 
 ## 
 ##  Fit range (n = 4)
-## Slope = -0.49 | FD = 1.49
+## Slope = -0.51 | FD = 1.51
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1082,10 +1088,10 @@ fd_dfa(HBI2_rnd)
 ##  Detrended FLuctuation Analysis 
 ## 
 ##  Full range (n = 8)
-## Slope = 0.48 | FD = 1.52 
+## Slope = 0.47 | FD = 1.52 
 ## 
 ##  Exclude large bin sizes (n = 8)
-## Slope = 0.48 | FD = 1.52 
+## Slope = 0.47 | FD = 1.52 
 ## 
 ##  Detrending: poly
 ## 
@@ -1107,10 +1113,10 @@ fd_psd(HBI2_rnd)
 ##  Power Spectral Density Slope 
 ## 
 ##  All frequencies (n = 384375)
-## Slope = 0.03 | FD = 1.51 
+## Slope = 0.07 | FD = 1.53 
 ## 
-##  Hurvich-Deo (n = 9431)
-## Slope = -0.36 | FD = 1.37
+##  Hurvich-Deo (n = 2826)
+## Slope = 0.09 | FD = 1.53
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1131,10 +1137,10 @@ fd_sda(HBI3_rnd)
 ##  Standardised Dispersion Analysis 
 ## 
 ##  Full range (n = 10)
-## Slope = -0.42 | FD = 1.42 
+## Slope = -0.54 | FD = 1.54 
 ## 
 ##  Fit range (n = 4)
-## Slope = -0.51 | FD = 1.51
+## Slope = -0.55 | FD = 1.55
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1154,10 +1160,10 @@ fd_dfa(HBI3_rnd)
 ##  Detrended FLuctuation Analysis 
 ## 
 ##  Full range (n = 8)
-## Slope = 0.58 | FD = 1.44 
+## Slope = 0.46 | FD = 1.54 
 ## 
 ##  Exclude large bin sizes (n = 8)
-## Slope = 0.58 | FD = 1.44 
+## Slope = 0.46 | FD = 1.54 
 ## 
 ##  Detrending: poly
 ## 
@@ -1179,10 +1185,10 @@ fd_psd(HBI3_rnd)
 ##  Power Spectral Density Slope 
 ## 
 ##  All frequencies (n = 384375)
-## Slope = -0.05 | FD = 1.48 
+## Slope = 0.08 | FD = 1.53 
 ## 
-##  Hurvich-Deo (n = 11018)
-## Slope = -0.03 | FD = 1.49
+##  Hurvich-Deo (n = 8693)
+## Slope = 0.03 | FD = 1.51
 ## 
 ## ~~~o~~o~~casnet~~o~~o~~~
 ```
@@ -1311,7 +1317,7 @@ HBI1surrogates$Obs <- HBI1
 plotTS_multi(HBI1surrogates)
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
 
 
 
@@ -1321,6 +1327,15 @@ HBI1surrogates_FD <- plyr::laply(1:Nsurrogates,function(s) fd_sda(y=HBI1surrogat
 
 # TS_4 Surrogates
 HBI2surrogates <- data.frame(tseries::surrogate(x = HBI2, ns = Nsurrogates, fft = FALSE, amplitude = FALSE))
+```
+
+```
+## Registered S3 method overwritten by 'quantmod':
+##   method            from
+##   as.zoo.data.frame zoo
+```
+
+```r
 colnames(HBI2surrogates) <- paste0("S",1:NCOL(HBI2surrogates))
 
 HBI2surrogates_FD <- plyr::laply(1:Nsurrogates,function(s) fd_sda(y=HBI2surrogates[,s], silent = TRUE)$fitRange$FD)
@@ -1349,19 +1364,19 @@ x <- data.frame(Source = c("HBI1", "HBI2", "HBI3"),
 plotSUR_hist(surrogateValues = HBI1surrogates_FD, observedValue = HBI1_FDsda, sides = "two.sided", doPlot = TRUE, measureName = "dfa FD HBI1")
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
 
 ```r
 plotSUR_hist(surrogateValues = HBI2surrogates_FD, observedValue = HBI2_FDsda, sides = "two.sided", doPlot = TRUE, measureName = "dfa FD HBI2")
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-22-2.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-23-2.png)<!-- -->
 
 ```r
 plotSUR_hist(surrogateValues = HBI3surrogates_FD, observedValue = HBI3_FDsda, sides = "two.sided", doPlot = TRUE, measureName = "dfa FD HBI3")
 ```
 
-![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-22-3.png)<!-- -->
+![](CMBSAL04_ASSIGNMENTS_GlobalScaling_files/figure-html/unnamed-chunk-23-3.png)<!-- -->
 
 
  * Let's print the results into a table
@@ -1378,9 +1393,9 @@ knitr::kable(x, digits = 2, booktabs=TRUE,formt="html")
 
 |Source | FDsda| FDsdaPhaseRND.median|
 |:------|-----:|--------------------:|
-|HBI1   |  1.13|                 1.49|
-|HBI2   |  1.03|                 1.50|
-|HBI3   |  1.54|                 1.51|
+|HBI1   |  1.13|                  1.5|
+|HBI2   |  1.03|                  1.5|
+|HBI3   |  1.54|                  1.5|
 
 
 <!-- **FD: SPECTRAL SLOPE** -->

@@ -30,6 +30,20 @@ editor_options:
 knitr::opts_chunk$set(include=TRUE, tidy = FALSE)
 ```
 
+
+
+</br>
+
+```{block2, type='rmdimportant'}
+* Watch the [**Assignment Lecture: Cross RQA**](https://youtu.be/6knxIS4gKjY) video before you make these assignments.
+* [Chapter 8, 9](https://complexity-methods.github.io/book/unordered-categorical-data.html) summarises most of the information in the video lecture. 
+* Install R package *casnet*, [follow these instructions](https://fredhasselman.com/casnet/).
+```
+
+</br>
+
+
+
 ## **Cross-Recurrence Analysis**
 
 Cross recurrence analysis can be used to study synchronisation and coupling direction. There are other several other packages and software that can run (C)RQA:
@@ -106,13 +120,9 @@ crqa_out <- rp_measures(RM, silent = FALSE)
 # Plot
 rp_plot(RM, plotDimensions = TRUE, plotMeasures = TRUE)
 
-# Diagonal profile --> The plot function is a bit broken, here we make our plot
-drp <- rp_diagProfile(RM = RM, diagWin = 40, doShuffle = FALSE, doPlot = FALSE)
-
-library(ggplot2)
-ggplot(drp, aes(x = as.numeric_discrete(labels), y = RR, colour = variable)) + 
-  geom_line() + theme_bw()
-
+# Diagonal profile
+drp <- rp_diagProfile(RM = RM, y1 = speeches$Obama, y2 = speeches$Patrick, diagWin = 40, doShuffle = TRUE, Nshuffle = 19)
+head(drp$data)
 ```
 
 
@@ -133,7 +143,6 @@ xy <- import("https://raw.githubusercontent.com/FredHasselman/The-Complex-System
 
 circle_x <- xy$x[1:500]
 circle_y <- xy$y[1:500]
-
 ```
 
 * You have just created two sine(-like) waves. We’ll examine if and how they are coupled in a shared phase space. 
@@ -212,14 +221,7 @@ RP <- mat_di2bi(RM, emRad = emRad)
 rp_plot(RP, plotDimensions = TRUE)
 
 # The diagonal profile
-drp <- rp_diagProfile(RP, diagWin = 50, doPlot = FALSE)
-
-library(ggplot2)
-ggplot(drp, aes(x = as.numeric_discrete(labels), y = RR, colour = variable)) + 
-  geom_line() + theme_bw()
-
-# Compare CRQA with one randomly shuffled series: broken...
-# drpRND <- rp_diagProfile(RP, diagWin = 50, doShuffle = TRUE, y1 = y1, y2 = y2, Nshuffle = 19, doPlot = FALSE)
+drp <- rp_diagProfile(RP,y1 = y1, y2 = y2, diagWin = 50, doShuffle = TRUE, Nshuffle = 19)
 
 ```
 
@@ -259,7 +261,7 @@ params_cy <- est_parameters(circle_y)
 emLag <- median(params_cx$optimLag, params_cy$optimLag)
 emDim <- max(params_cx$optimDim, params_cy$optimDim)
 
-RM <- rp(y1=circle_x, y2=circle_y,emDim = emDim, emLag = emLag)
+RM <- rp(y1=circle_x, y2=circle_y, emDim = emDim, emLag = emLag)
 
 # Unthresholded Matrix
 rp_plot(RM, plotDimensions = TRUE)
@@ -270,12 +272,8 @@ RP <- mat_di2bi(RM, emRad = emRad)
 rp_plot(RP, plotDimensions = TRUE)
 
 # The diagonal profile
-drp <- rp_diagProfile(RP, diagWin = 100, doPlot = FALSE)
+drp <- rp_diagProfile(RP, diagWin = 100, y1 = circle_x, y2 = circle_y, doShuffle = TRUE, Nshuffle = 19)
 
-
-library(ggplot2)
-ggplot(drp, aes(x = as.numeric_discrete(labels), y = RR, colour = variable)) + 
-  geom_line() + theme_bw()
 ```
 
 

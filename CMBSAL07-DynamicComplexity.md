@@ -26,16 +26,14 @@ output:
 
 
 
-## **Set up**
 
-Make sure that the following packages are installed and loaded.The OSFR package should be installed from GitHub. (you may wish/need to use more packages of course)
 
-```r
-library(invctr)
-library(casnet)
-library(plyr)
-library(tidyverse)
-```
+
+\BeginKnitrBlock{rmdimportant}<div class="rmdimportant">* Watch the [**Assignment Lecture: Multivariate time series analysis**](https://youtu.be/7pm28GYt5N0) video before you make these assignments.
+* [casnet vignette](https://fredhasselman.com/casnet/articles/dynamiccomplexity.html) summarises most of the information in the video lecture. 
+* Install R package *casnet*, [follow these instructions](https://fredhasselman.com/casnet/).</div>\EndKnitrBlock{rmdimportant}
+
+
 
 ## **Early Warning Signals in a Clinical Case Study**
 
@@ -46,6 +44,28 @@ In this assignment, you'll use complex systems theory and methodology developed 
 
 ### First Steps {-}
 Load the data from this study as follows:
+
+```r
+library(casnet)
+library(tidyverse)
+```
+
+```
+## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+```
+
+```
+## ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+## ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+## ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+## ✔ readr   2.1.2     ✔ forcats 0.5.1
+```
+
+```
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+```
 
 ```r
 data("manyAnalystsESM")
@@ -68,11 +88,13 @@ library(imputeTS)
 ```
 
 ```r
+library(invctr)
+
 vars <- c(seq("energetic"%ci%manyAnalystsESM,"procrast"%ci%manyAnalystsESM),"avoid_people"%ci%manyAnalystsESM)
 
 
 op <- par(mfrow = c(ceiling(length(vars)/4),4),mar =c(2,2,2,2))
-l_ply(vars, function(c) imputeTS::ggplot_na_distribution(x = manyAnalystsESM[,c],title =  colnames(manyAnalystsESM)[c],xlab = "",ylab = ""))
+plyr::l_ply(vars, function(c) imputeTS::ggplot_na_distribution(x = manyAnalystsESM[,c],title =  colnames(manyAnalystsESM)[c],xlab = "",ylab = ""))
 par(op)
 ```
 
@@ -112,14 +134,22 @@ Search for mean-shifts in the item 'feeling positive' using the function ts_leve
 
 ```r
 lvl <- ts_levels(df.ema$positive, minDataSplit = 12, minLevelDuration = 7, changeSensitivity = 0.05, maxLevels=30, method="anova")
+```
 
+```
+## Warning in ts_levels(df.ema$positive, minDataSplit = 12, minLevelDuration = 7, :
+## The largest level difference is smaller than the value of argument minChange.
+## Setting minChange to NA
+```
+
+```r
 lvl_long <- lvl$pred %>% 
   gather(key=variable, value=value, -x)
   
 ggplot(lvl_long, aes(x=x, y=value, colour=variable)) + geom_line() + theme_bw()
 ```
 
-![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 ## Dynamic Complexity {.tabset .tabset-fade .tabset-pills}
 
@@ -156,23 +186,21 @@ dc.case <- dc_win(df.ema, win = win, scale_min=0, scale_max=100, doPlot = TRUE, 
 ## Warning: Removed 1 rows containing missing values (geom_vline).
 ```
 
-![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 ```
 ## Warning: Removed 184 rows containing missing values (geom_raster).
-
-## Warning: Removed 1 rows containing missing values (geom_vline).
+## Removed 1 rows containing missing values (geom_vline).
 ```
 
-![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-5-2.png)<!-- -->
+![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
 
 ```
 ## Warning: Removed 184 rows containing missing values (geom_raster).
-
-## Warning: Removed 1 rows containing missing values (geom_vline).
+## Removed 1 rows containing missing values (geom_vline).
 ```
 
-![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-5-3.png)<!-- -->
+![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-6-3.png)<!-- -->
 
 ```r
 plotDC_res(df_win = dc.case, win = win, doPlot = TRUE, colOrder = NA)
@@ -180,11 +208,10 @@ plotDC_res(df_win = dc.case, win = win, doPlot = TRUE, colOrder = NA)
 
 ```
 ## Warning: Removed 184 rows containing missing values (geom_raster).
-
-## Warning: Removed 1 rows containing missing values (geom_vline).
+## Removed 1 rows containing missing values (geom_vline).
 ```
 
-![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-5-4.png)<!-- -->
+![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-6-4.png)<!-- -->
 
 ```r
 ccp.case <- dc_ccp(df_win = dc.case)
@@ -193,18 +220,17 @@ plotDC_ccp(df_ccp = ccp.case, win = win, colOrder = NA, title = "Cumulative Comp
 
 ```
 ## Warning: Removed 54 rows containing missing values (geom_raster).
-
-## Warning: Removed 1 rows containing missing values (geom_vline).
+## Removed 1 rows containing missing values (geom_vline).
 ```
 
-![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-5-5.png)<!-- -->
+![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-6-5.png)<!-- -->
 
 ```r
 dc.mean <- rowMeans(as.matrix(dc.case))
 plot(dc.mean, type='l')
 ```
 
-![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-5-6.png)<!-- -->
+![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-6-6.png)<!-- -->
 
 
 ## Dynamic Complexity as an Early-Warning Signal? {.tabset .tabset-fade .tabset-pills}
@@ -243,7 +269,7 @@ df.ema %>%
 ## Warning: Removed 6 row(s) containing missing values (geom_path).
 ```
 
-![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](CMBSAL07-DynamicComplexity_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 
 

@@ -27,7 +27,15 @@ editor_options:
 ---
 
 
-# **Fluctuation and Disperion analyses** {-}
+```{block2, type='rmdimportant'}
+* Watch the [**Assignment Lecture: Scaling Phenomena**](https://youtu.be/yh4cn09KW2Q) video before you make these assignments.
+* [Chapter 6](https://complexity-methods.github.io/book/fluctuation-analyses-global-scaling.html) summarises most of the information in the video lecture. 
+* Install R package *casnet*, [follow these instructions](https://fredhasselman.com/casnet/).
+```
+
+
+
+# **Fluctuation and Dispersion analyses** {-}
 
     
 ### Three plus two time series {-}

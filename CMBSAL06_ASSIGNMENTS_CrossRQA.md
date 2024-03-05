@@ -28,6 +28,18 @@ editor_options:
 
 
 
+
+
+</br>
+
+\BeginKnitrBlock{rmdimportant}<div class="rmdimportant">* Watch the [**Assignment Lecture: Cross RQA**](https://youtu.be/6knxIS4gKjY) video before you make these assignments.
+* [Chapter 8, 9](https://complexity-methods.github.io/book/unordered-categorical-data.html) summarises most of the information in the video lecture. 
+* Install R package *casnet*, [follow these instructions](https://fredhasselman.com/casnet/).</div>\EndKnitrBlock{rmdimportant}
+
+</br>
+
+
+
 ## **Cross-Recurrence Analysis**
 
 Cross recurrence analysis can be used to study synchronisation and coupling direction. There are other several other packages and software that can run (C)RQA:
@@ -126,24 +138,34 @@ crqa_out <- rp_measures(RM, silent = FALSE)
 rp_plot(RM, plotDimensions = TRUE, plotMeasures = TRUE)
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-3-1.png)<!-- -->![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-3-2.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-4-1.png)<!-- -->![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-4-2.png)<!-- -->
 
 ```r
-# Diagonal profile --> The plot function is a bit broken, here we make our plot
-drp <- rp_diagProfile(RM = RM, diagWin = 40, doShuffle = FALSE, doPlot = FALSE)
+# Diagonal profile
+drp <- rp_diagProfile(RM = RM, y1 = speeches$Obama, y2 = speeches$Patrick, diagWin = 40, doShuffle = TRUE, Nshuffle = 19)
 ```
 
 ```
-## Profile 1
+## Calculating diagonal recurrence profiles...
 ```
+
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-4-3.png)<!-- -->
 
 ```r
-library(ggplot2)
-ggplot(drp, aes(x = as.numeric_discrete(labels), y = RR, colour = variable)) + 
-  geom_line() + theme_bw()
+head(drp$data)
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-3-3.png)<!-- -->
+```
+## # A tibble: 6 × 7
+##   Diagonal labels sdRRrnd   ciHI    ciLO `Mean Shuffled` Observed
+##      <dbl> <ord>    <dbl>  <dbl>   <dbl>           <dbl>    <dbl>
+## 1        1 -40     0.0398 0.0442 0.00842          0.0263      0.5
+## 2        2 -39     0.0348 0.0359 0.00459          0.0202      0  
+## 3        3 -38     0.0354 0.0422 0.0104           0.0263      0  
+## 4        4 -37     0.0342 0.0470 0.0162           0.0316      0  
+## 5        5 -36     0.0382 0.0468 0.0124           0.0296      0  
+## 6        6 -35     0.0521 0.0637 0.0168           0.0402      0
+```
 
 
 ### Continuous CRQA and the Diagonal Profile {.tabset .tabset-fade .tabset-pills}
@@ -215,14 +237,14 @@ y2 <- sin(.01*(1:500*2*pi/67)^2)
 plot(cbind(ts(y1),ts(y2)))
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 ```r
 # State space
 plot(y1,y2,type="l", pty="s",main = "Sine waves")
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-5-2.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
 
 * Find a common embedding delay and an embedding dimension (if you calculate an embedding dimension for each signal separately, as a rule of thumb use the highest embedding dimension you find in further analyses).
 
@@ -238,13 +260,13 @@ params_y1 <- est_parameters(y1)
 ##   as.zoo.data.frame zoo
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 ```r
 params_y2 <- est_parameters(y2)
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
 
 > The diagnostic plot of the sine wave `y1` looks a bit odd. This is due to the fact that mutual information will discretize the time series, and the sine will  fill all bins with the same values, because it is perfectly repeating itself. We'll use emLag = 1, emDim = 2. When in doubt, do not embed the time series... here we know it is a 2D 'system'.
 
@@ -259,7 +281,7 @@ RM <- rp(y1=y1, y2=y2,emDim = emDim, emLag = emLag)
 rp_plot(RM, plotDimensions = TRUE)
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 ```r
 # Thresholded Matrix, based on 5% RR
@@ -268,7 +290,7 @@ rp_plot(RM, plotDimensions = TRUE)
 
 ```
 ## 
-## Searching for a radius that will yield 0.05 ± 0.01 for RR 
+## Searching for a radius that will yield 0.05 ?? 0.01 for RR 
 ## Iteration 1
 ```
 
@@ -286,29 +308,18 @@ RP <- mat_di2bi(RM, emRad = emRad)
 rp_plot(RP, plotDimensions = TRUE)
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-8-2.png)<!-- -->
 
 ```r
 # The diagonal profile
-drp <- rp_diagProfile(RP, diagWin = 50, doPlot = FALSE)
+drp <- rp_diagProfile(RP,y1 = y1, y2 = y2, diagWin = 50, doShuffle = TRUE, Nshuffle = 19)
 ```
 
 ```
-## Profile 1
+## Calculating diagonal recurrence profiles...
 ```
 
-```r
-library(ggplot2)
-ggplot(drp, aes(x = as.numeric_discrete(labels), y = RR, colour = variable)) + 
-  geom_line() + theme_bw()
-```
-
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-7-3.png)<!-- -->
-
-```r
-# Compare CRQA with one randomly shuffled series: broken...
-# drpRND <- rp_diagProfile(RP, diagWin = 50, doShuffle = TRUE, y1 = y1, y2 = y2, Nshuffle = 19, doPlot = FALSE)
-```
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-8-3.png)<!-- -->
 
 
 #### Answers Circle Tracing {-}
@@ -328,14 +339,14 @@ circle_y <- xy$y[1:1000]
 plot(cbind(ts(circle_x),ts(circle_y)))
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 ```r
 # State Space
 plot(circle_x,circle_y,type="l", pty="s",main = "Mouse Circle Trace")
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-8-2.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-9-2.png)<!-- -->
 
 * Estimate parameters
 
@@ -344,13 +355,13 @@ plot(circle_x,circle_y,type="l", pty="s",main = "Mouse Circle Trace")
 params_cx <- est_parameters(circle_x)
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 ```r
 params_cy <- est_parameters(circle_y)
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-9-2.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-10-2.png)<!-- -->
 
 > The circle trace data can be embedded in 3 dimensions. This is not so strange, even though the circle was drawn in 2 dimensions, there are also speed/acceleration and accuracy constraints.
 
@@ -362,13 +373,13 @@ params_cy <- est_parameters(circle_y)
 emLag <- median(params_cx$optimLag, params_cy$optimLag)
 emDim <- max(params_cx$optimDim, params_cy$optimDim)
 
-RM <- rp(y1=circle_x, y2=circle_y,emDim = emDim, emLag = emLag)
+RM <- rp(y1=circle_x, y2=circle_y, emDim = emDim, emLag = emLag)
 
 # Unthresholded Matrix
 rp_plot(RM, plotDimensions = TRUE)
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 ```r
 # Thresholded Matrix, based on 5% RR
@@ -377,7 +388,7 @@ rp_plot(RM, plotDimensions = TRUE)
 
 ```
 ## 
-## Searching for a radius that will yield 0.05 ± 0.01 for RR 
+## Searching for a radius that will yield 0.05 ?? 0.01 for RR 
 ## Iteration 1 
 ## Iteration 2
 ```
@@ -396,24 +407,18 @@ RP <- mat_di2bi(RM, emRad = emRad)
 rp_plot(RP, plotDimensions = TRUE)
 ```
 
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-10-2.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-11-2.png)<!-- -->
 
 ```r
 # The diagonal profile
-drp <- rp_diagProfile(RP, diagWin = 100, doPlot = FALSE)
+drp <- rp_diagProfile(RP, diagWin = 100, y1 = circle_x, y2 = circle_y, doShuffle = TRUE, Nshuffle = 19)
 ```
 
 ```
-## Profile 1
+## Calculating diagonal recurrence profiles...
 ```
 
-```r
-library(ggplot2)
-ggplot(drp, aes(x = as.numeric_discrete(labels), y = RR, colour = variable)) + 
-  geom_line() + theme_bw()
-```
-
-![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-10-3.png)<!-- -->
+![](CMBSAL06_ASSIGNMENTS_CrossRQA_files/figure-html/unnamed-chunk-11-3.png)<!-- -->
 
 
   

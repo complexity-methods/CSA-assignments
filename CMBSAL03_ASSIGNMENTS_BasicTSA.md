@@ -390,7 +390,7 @@ fd_RR
 ##         globalAutoCoVariance = VAR$acf[1])
 ##     return(RelR)
 ## }
-## <bytecode: 0x1241c1170>
+## <bytecode: 0x117157900>
 ## <environment: namespace:casnet>
 ```
 

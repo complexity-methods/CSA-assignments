@@ -28,15 +28,16 @@ output:
 ```{r, include=FALSE}
 knitr::opts_chunk$set(include=TRUE, tidy = FALSE)
 ```
-## **Set up**
 
-Make sure that the following packages are installed and loaded.The OSFR package should be installed from GitHub. (you may wish/need to use more packages of course)
-```{r notrun, message=FALSE, warning=FALSE, paged.print=FALSE}
-library(invctr)
-library(casnet)
-library(plyr)
-library(tidyverse)
+
+
+```{block2, type='rmdimportant'}
+* Watch the [**Assignment Lecture: Multivariate time series analysis**](https://youtu.be/7pm28GYt5N0) video before you make these assignments.
+* [casnet vignette](https://fredhasselman.com/casnet/articles/dynamiccomplexity.html) summarises most of the information in the video lecture. 
+* Install R package *casnet*, [follow these instructions](https://fredhasselman.com/casnet/).
 ```
+
+
 
 ## **Early Warning Signals in a Clinical Case Study**
 
@@ -48,6 +49,8 @@ In this assignment, you'll use complex systems theory and methodology developed 
 ### First Steps {-}
 Load the data from this study as follows:
 ```{r firststeps}
+library(casnet)
+library(tidyverse)
 data("manyAnalystsESM")
 ```
 
@@ -58,12 +61,13 @@ Also, take a look at the paper by Bastiaansen et al. (2019).
 Let's inspect the data. Run this code, which results in plots of the data with indicated missing values. 
 ```{r,fig.height=10}
 library(imputeTS)
+library(invctr)
 
 vars <- c(seq("energetic"%ci%manyAnalystsESM,"procrast"%ci%manyAnalystsESM),"avoid_people"%ci%manyAnalystsESM)
 
 
 op <- par(mfrow = c(ceiling(length(vars)/4),4),mar =c(2,2,2,2))
-l_ply(vars, function(c) imputeTS::ggplot_na_distribution(x = manyAnalystsESM[,c],title =  colnames(manyAnalystsESM)[c],xlab = "",ylab = ""))
+plyr::l_ply(vars, function(c) imputeTS::ggplot_na_distribution(x = manyAnalystsESM[,c],title =  colnames(manyAnalystsESM)[c],xlab = "",ylab = ""))
 par(op)
 ```
 
